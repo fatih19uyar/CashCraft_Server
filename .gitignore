@@ -1,0 +1,9 @@
+node_modules
+npm-debug.log
+desktop.ini
+config.ts
+package-lock.json
+.DS_Store
+staging
+example.log
+.vscode
