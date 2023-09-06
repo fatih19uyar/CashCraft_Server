@@ -21,18 +21,6 @@ const db = mongoose.connection;
 
 db.once("connected", async () => {
   console.log("Connected to MongoDB successfully.");
-  const collectionsToCheck = ["users", "campaigns", "transactiondata"];
-  for (const collectionName of collectionsToCheck) {
-    const collInfo = await mongoose.connection.db
-      .listCollections({ name: collectionName })
-      .next();
-    if (!collInfo) {
-      await mongoose.connection.db.createCollection(collectionName);
-      console.log(`${collectionName} collection created.`);
-    } else {
-      console.log(`${collectionName} collection already exists.`);
-    }
-  }
 });
 db.on("error", (err) => {
   console.error("MongoDB connection error:", err.message);
