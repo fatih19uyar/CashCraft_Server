@@ -1,23 +1,35 @@
-import { prop, getModelForClass } from '@typegoose/typegoose';
-import { v4 as uuidv4 } from 'uuid';
+import { prop, getModelForClass } from "@typegoose/typegoose";
+import { v4 as uuidv4 } from "uuid";
 
-class UserClass {
-    @prop({ required: true })
-    name!: string;
+class User {
+  @prop()
+  name!: string;
 
-    @prop({ required: true })
-    phoneNumber!: string;
+  @prop()
+  phoneNumber!: string;
 
-    @prop({ required: true })
-    photo!: string;
+  @prop()
+  photo!: string;
 
-    @prop({ required: true, unique: true })
-    email!: string;
+  @prop()
+  email!: string;
 
-    @prop({ required: true, default: uuidv4, unique: true })
-    uuid!: string;
+  @prop({ required: true, default: uuidv4, unique: true })
+  uuid!: string;
+
+  @prop()
+  isEmailVerified?: boolean; // E-posta doğrulama durumu
+
+  @prop()
+  verificationCode?: string; // E-posta doğrulama kodu
+
+  @prop()
+  resetCode?: string; // Şifre sıfırlama kodu
+
+  @prop()
+  password!: string;
 }
 
-const UserModel = getModelForClass(UserClass);
+const UserModel = getModelForClass(User);
 
 export default UserModel;
