@@ -6,6 +6,7 @@ import {
   resetPassword,
   verifyEmailActivationCode,
   sendVerificationCodeByEmail,
+  checkEmailExists,
 } from "../controllers/authController";
 
 const authRoutes = express.Router();
@@ -18,5 +19,6 @@ authRoutes.post("/forgotPassword", forgotPassword);
 authRoutes.post("/resetPassword", resetPassword);
 authRoutes.post("/verifyEmailActivationCode", verifyEmailActivationCode); //
 authRoutes.post("/sendEmailActivationCode", sendVerificationCodeByEmail); //
+authRoutes.post("/checkEmailExists", checkEmailExists);
 
 export default authRoutes;

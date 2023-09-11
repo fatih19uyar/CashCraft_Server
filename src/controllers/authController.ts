@@ -70,7 +70,7 @@ export async function signIn(req: Request, res: Response) {
       expiresIn: "7d",
     });
 
-    res.status(200).json({ user, token });
+    res.status(200).json({ token });
   } catch (error) {
     console.log(error);
     res
@@ -178,6 +178,24 @@ export async function verifyEmailActivationCode(req: Request, res: Response) {
     await user.save();
 
     return res.status(200).json({ message: "E-posta doğrulandı." });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Bir hata oluştu. Lütfen tekrar deneyin." });
+  }
+}
+
+export async function checkEmailExists(req: Request, res: Response) {
+  try {
+    const { email } = req.body;
+    const user = await UserModel.findOne({ email });
+    if (user) {
+      return res
+        .status(400)
+        .json({ message: "Bu e-posta zaten kullanılıyor." });
+    } else {
+      return res.status(200).json({ message: "Bu e-posta kullanılabilir." });
+    }
   } catch (error) {
     res
       .status(500)
