@@ -1,14 +1,15 @@
 import mongoose from "mongoose";
 import config from "../config";
-import UserModel from "./models/User";
 import express from "express";
 import authRoutes from "./routers/authRoutes";
 import { Request, Response, NextFunction } from "express";
+import logger from "morgan";
 
 const app = express();
 
 // Middleware
 app.use(express.json());
+app.use(logger("dev"));
 
 mongoose.connect(config.mongoUrl, {
   useNewUrlParser: true,
