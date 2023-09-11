@@ -5,8 +5,6 @@ import UserModel from "../models/User";
 import {
   generateResetCode,
   generateVerificationCode,
-  sendActivationCodeByEmail,
-  sendResetCodeByEmail,
 } from "../utils/email/mailService";
 import config from "../../config";
 
@@ -68,7 +66,9 @@ export async function signIn(req: Request, res: Response) {
       expiresIn: "7d",
     });
     const { _id, uuid, name, phoneNumber, photo } = user;
-
+    const phoneVerificationCode: any = generateVerificationCode();
+    user.phoneVerificationCode = phoneVerificationCode;
+    await user.save();
     res.status(200).json({
       user: { _id, email, uuid, name, phoneNumber, photo },
       token,
@@ -89,14 +89,10 @@ export async function forgotPassword(req: Request, res: Response) {
     if (!user) {
       return res.status(404).json({ message: "Kullanıcı bulunamadı." });
     }
-
-    const resetCode = generateResetCode();
-
+    const resetCode: any = generateVerificationCode();
     //await sendResetCodeByEmail(user.email, resetCode); // E-posta sunucu durumu halledilince açılacak
-
     user.resetCode = resetCode;
     await user.save();
-
     return res.status(200).json({ message: "Reset kodu gönderildi." });
   } catch (error) {
     res
@@ -108,16 +104,13 @@ export async function forgotPassword(req: Request, res: Response) {
 export async function resetPassword(req: Request, res: Response) {
   try {
     const { email, resetCode, newPassword } = req.body;
-
     const user = await UserModel.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: "Kullanıcı bulunamadı." });
     }
-
     if (user.resetCode !== resetCode) {
       return res.status(401).json({ message: "Geçersiz reset kodu." });
     }
-
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
     user.resetCode = undefined;
@@ -198,6 +191,46 @@ export async function checkEmailExists(req: Request, res: Response) {
     } else {
       return res.status(200).json({ message: "Bu e-posta kullanılabilir." });
     }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Bir hata oluştu. Lütfen tekrar deneyin." });
+  }
+}
+export async function verifyPhoneActivationCode(req: Request, res: Response) {
+  try {
+    const { email, verificationCode } = req.body;
+
+    const user = await UserModel.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "Kullanıcı bulunamadı." });
+    }
+    if (user.phoneVerificationCode !== verificationCode) {
+      console.log(verificationCode, user.phoneVerificationCode);
+      return res.status(401).json({ message: "Geçersiz aktivasyon kodu." });
+    }
+    return res.status(200).json({ id: user._id, message: "Login Success." });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Bir hata oluştu. Lütfen tekrar deneyin." });
+  }
+}
+export async function verifyResetCode(req: Request, res: Response) {
+  try {
+    const { email, verificationCode } = req.body;
+
+    const user = await UserModel.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "Kullanıcı bulunamadı." });
+    }
+    if (user.resetCode !== verificationCode) {
+      console.log(verificationCode, user.resetCode);
+      return res.status(401).json({ message: "Geçersiz aktivasyon kodu." });
+    }
+    return res.status(200).json({ id: user._id, message: "Login Success." });
   } catch (error) {
     res
       .status(500)

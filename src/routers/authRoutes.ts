@@ -7,6 +7,8 @@ import {
   verifyEmailActivationCode,
   sendVerificationCodeByEmail,
   checkEmailExists,
+  verifyPhoneActivationCode,
+  verifyResetCode,
 } from "../controllers/authController";
 
 const authRoutes = express.Router();
@@ -20,5 +22,6 @@ authRoutes.post("/resetPassword", resetPassword);
 authRoutes.post("/verifyEmailActivationCode", verifyEmailActivationCode); //
 authRoutes.post("/sendEmailActivationCode", sendVerificationCodeByEmail); //
 authRoutes.post("/checkEmailExists", checkEmailExists);
-
+authRoutes.post("/verifyPhoneActivationCode", verifyPhoneActivationCode);
+authRoutes.post("/verifyResetCode", verifyResetCode);
 export default authRoutes;

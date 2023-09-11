@@ -21,6 +21,9 @@ class User {
   isEmailVerified?: boolean; // E-posta doğrulama durumu
 
   @prop()
+  phoneVerificationCode?: string; //  Telefon doğrulama kodu
+
+  @prop()
   verificationCode?: string; // E-posta doğrulama kodu
 
   @prop()
