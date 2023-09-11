@@ -60,17 +60,19 @@ export async function signIn(req: Request, res: Response) {
     if (!user.isEmailVerified) {
       return res.status(401).json({ message: "E-posta doğrulanmamış." });
     }
-
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Geçersiz parola." });
     }
-
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
       expiresIn: "7d",
     });
+    const { _id, uuid, name, phoneNumber, photo } = user;
 
-    res.status(200).json({ token });
+    res.status(200).json({
+      user: { _id, email, uuid, name, phoneNumber, photo },
+      token,
+    });
   } catch (error) {
     console.log(error);
     res
