@@ -8,37 +8,42 @@ import {
   sendActivationCodeByEmail,
   sendResetCodeByEmail,
 } from "../utils/email/mailService";
+import config from "../../config";
 
-const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key"; // JWT gizli anahtarınız
+const JWT_SECRET = config.secretKey; // JWT gizli anahtarınız
 
 export async function signUp(req: Request, res: Response) {
   try {
     const { name, phoneNumber, photo, email, password } = req.body;
-
     // Şifreyi şifreleyin
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const existingUser = await UserModel.findOne({ email });
-    if (existingUser) {
+    const hashedPassword = await bcrypt.hash(password, 6);
+    const existingUser: any = await UserModel.findOne({ email });
+    if (existingUser.name) {
       return res
         .status(400)
         .json({ message: "Bu e-posta zaten kullanılıyor." });
     }
+    await UserModel.updateOne(
+      { _id: existingUser._id },
+      {
+        $set: {
+          name: name,
+          phoneNumber: phoneNumber,
+          photo: photo,
+          password: hashedPassword,
+          createDate: new Date(),
+        },
+      }
+    );
 
-    const user = await UserModel.create({
-      name,
-      phoneNumber,
-      photo,
-      email,
-      password: hashedPassword, // Şifrelenmiş şifreyi kaydedin
-    });
-
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
+    const token = jwt.sign({ userId: existingUser._id }, JWT_SECRET, {
       expiresIn: "7d",
     });
 
-    res.status(201).json({ user, token });
+    res.status(201).json({ existingUser, token });
   } catch (error) {
+    console.log(error);
+
     res
       .status(500)
       .json({ message: "Bir hata oluştu. Lütfen tekrar deneyin." });
@@ -67,6 +72,7 @@ export async function signIn(req: Request, res: Response) {
 
     res.status(200).json({ user, token });
   } catch (error) {
+    console.log(error);
     res
       .status(500)
       .json({ message: "Bir hata oluştu. Lütfen tekrar deneyin." });
@@ -137,14 +143,15 @@ export async function sendVerificationCodeByEmail(req: Request, res: Response) {
     await user.save();
 
     // E-posta aktivasyon kodunu kullanıcıya gönderin
-    await sendActivationCodeByEmail(user.email, verificationCode);
+    //  await sendActivationCodeByEmail(user.email, verificationCode);
 
     return res.status(200).json({ message: "Aktivasyon kodu gönderildi." });
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
-    res
-      .status(500)
-      .json({ message: "Bir hata oluştu. Lütfen tekrar deneyin." });
+    res.status(500).json({
+      message: "Bir hata oluştu. Lütfen tekrar deneyin.",
+      error: error.message,
+    });
   }
 }
 
