@@ -4,6 +4,7 @@ import express from "express";
 import authRoutes from "./routers/authRoutes";
 import { Request, Response, NextFunction } from "express";
 import logger from "morgan";
+import userRoutes from "./routers/userRoutes";
 
 const app = express();
 
@@ -38,6 +39,7 @@ process.on("SIGINT", () => {
   });
 });
 app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 //app.use("/campaing", campaingRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
