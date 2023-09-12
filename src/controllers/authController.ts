@@ -38,7 +38,7 @@ export async function signUp(req: Request, res: Response) {
       expiresIn: "7d",
     });
 
-    res.status(201).json({ existingUser, token });
+    res.status(201).json({ token });
   } catch (error) {
     console.log(error);
 
@@ -65,12 +65,10 @@ export async function signIn(req: Request, res: Response) {
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
       expiresIn: "7d",
     });
-    const { _id, uuid, name, phoneNumber, photo } = user;
     const phoneVerificationCode: any = generateVerificationCode();
     user.phoneVerificationCode = phoneVerificationCode;
     await user.save();
     res.status(200).json({
-      user: { _id, email, uuid, name, phoneNumber, photo },
       token,
     });
   } catch (error) {
