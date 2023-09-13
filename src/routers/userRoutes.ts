@@ -12,8 +12,8 @@ const userRoutes = express.Router();
 userRoutes.use(verifyToken);
 
 userRoutes.get("/listUser", listUsers);
-userRoutes.get("/findUser/:id", findUser);
-userRoutes.put("/updateUser/:id", updateUser);
-userRoutes.delete("/deleteUser/:id", deleteUser);
+userRoutes.get("/findUser", findUser);
+userRoutes.put("/updateUser", updateUser);
+userRoutes.delete("/deleteUser", deleteUser);
 
 export default userRoutes;
