@@ -1,5 +1,3 @@
-// userRoutes.ts
-
 import express from "express";
 import {
   listUsers,

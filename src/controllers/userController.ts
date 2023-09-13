@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import UserModel from "../models/User";
+import config from "../../config";
+import jwt from "jsonwebtoken";
 
 export async function listUsers(req: Request, res: Response) {
   try {
@@ -13,8 +15,11 @@ export async function listUsers(req: Request, res: Response) {
 }
 export async function findUser(req: Request, res: Response) {
   try {
-    const { id } = req.params;
-    const user = await UserModel.findById(id, { password: 0 });
+    const authorizationHeader: any = req.headers.authorization;
+    const token = authorizationHeader.split(" ")[1];
+    const decodedToken: any = jwt.verify(token, config.secretKey);
+    const userId = decodedToken.userId;
+    const user = await UserModel.findById(userId, { password: 0 });
     if (!user) {
       return res.status(404).json({ message: "Kullanıcı bulunamadı" });
     }
@@ -26,9 +31,12 @@ export async function findUser(req: Request, res: Response) {
 
 export async function updateUser(req: Request, res: Response) {
   try {
-    const { id } = req.params;
+    const authorizationHeader: any = req.headers.authorization;
+    const token = authorizationHeader.split(" ")[1];
+    const decodedToken: any = jwt.verify(token, config.secretKey);
+    const userId = decodedToken.userId;
     const updateData = req.body;
-    const user = await UserModel.findByIdAndUpdate(id, updateData, {
+    const user = await UserModel.findByIdAndUpdate(userId, updateData, {
       new: true,
     });
     if (!user) {
@@ -45,8 +53,11 @@ export async function updateUser(req: Request, res: Response) {
 // Belirli bir kullanıcıyı silme işlemi
 export async function deleteUser(req: Request, res: Response) {
   try {
-    const { id } = req.params;
-    const user = await UserModel.findByIdAndDelete(id);
+    const authorizationHeader: any = req.headers.authorization;
+    const token = authorizationHeader.split(" ")[1];
+    const decodedToken: any = jwt.verify(token, config.secretKey);
+    const userId = decodedToken.userId;
+    const user = await UserModel.findByIdAndDelete(userId);
     if (!user) {
       return res.status(404).json({ message: "Kullanıcı bulunamadı" });
     }
