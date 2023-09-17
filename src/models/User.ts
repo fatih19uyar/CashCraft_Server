@@ -1,5 +1,4 @@
 import { prop, getModelForClass } from "@typegoose/typegoose";
-import { v4 as uuidv4 } from "uuid";
 
 class User {
   @prop()
@@ -13,9 +12,6 @@ class User {
 
   @prop()
   email!: string;
-
-  @prop({ required: true, default: uuidv4, unique: true })
-  uuid!: string;
 
   @prop()
   isEmailVerified?: boolean; // E-posta doğrulama durumu
