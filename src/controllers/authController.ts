@@ -181,11 +181,11 @@ export async function verifyEmailActivationCode(req: Request, res: Response) {
 export async function checkEmailExists(req: Request, res: Response) {
   try {
     const { email } = req.body;
-    const user = await UserModel.findOne({ email });
-    if (user) {
-      return res
-        .status(400)
-        .json({ message: "Bu e-posta zaten kullanılıyor." });
+    const user: any = await UserModel.findOne({ email });
+    if (user.password) {
+      return res.status(400).json({
+        message: "Bu e-posta zaten kullanılıyor.",
+      });
     } else {
       return res.status(200).json({ message: "Bu e-posta kullanılabilir." });
     }
