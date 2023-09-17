@@ -158,10 +158,6 @@ export async function verifyEmailActivationCode(req: Request, res: Response) {
     if (!user) {
       return res.status(404).json({ message: "Kullanıcı bulunamadı." });
     }
-    // E-posta zaten doğrulandıysa
-    if (user.isEmailVerified) {
-      return res.status(400).json({ message: "E-posta zaten doğrulandı." });
-    }
     // E-posta aktivasyon kodunu kontrol edin
     if (user.verificationCode !== verificationCode) {
       return res.status(401).json({ message: "Geçersiz aktivasyon kodu." });
@@ -182,7 +178,7 @@ export async function checkEmailExists(req: Request, res: Response) {
   try {
     const { email } = req.body;
     const user: any = await UserModel.findOne({ email });
-    if (user.password) {
+    if (user && user.password) {
       return res.status(400).json({
         message: "Bu e-posta zaten kullanılıyor.",
       });
