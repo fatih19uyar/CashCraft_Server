@@ -9,6 +9,7 @@ import {
   checkEmailExists,
   verifyPhoneActivationCode,
   verifyResetCode,
+  checkPhoneNumberExists,
 } from "../controllers/authController";
 
 const authRoutes = express.Router();
@@ -24,4 +25,6 @@ authRoutes.post("/sendEmailActivationCode", sendVerificationCodeByEmail); //
 authRoutes.post("/checkEmailExists", checkEmailExists);
 authRoutes.post("/verifyPhoneActivationCode", verifyPhoneActivationCode);
 authRoutes.post("/verifyResetCode", verifyResetCode);
+authRoutes.post("/checkPhoneNumberExists", checkPhoneNumberExists);
+
 export default authRoutes;

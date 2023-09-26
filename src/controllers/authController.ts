@@ -191,6 +191,26 @@ export async function checkEmailExists(req: Request, res: Response) {
       .json({ message: "Bir hata oluştu. Lütfen tekrar deneyin." });
   }
 }
+export async function checkPhoneNumberExists(req: Request, res: Response) {
+  try {
+    const { phoneNumber } = req.body;
+    console.log(phoneNumber);
+    const user: any = await UserModel.findOne({ phoneNumber });
+    if (user && user.password) {
+      return res.status(400).json({
+        message: "Bu Telefon Numarası zaten kullanılıyor.",
+      });
+    } else {
+      return res
+        .status(200)
+        .json({ message: "Bu Telefon Numarası kullanılabilir." });
+    }
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Bir hata oluştu. Lütfen tekrar deneyin." });
+  }
+}
 export async function verifyPhoneActivationCode(req: Request, res: Response) {
   try {
     const { email, verificationCode } = req.body;
