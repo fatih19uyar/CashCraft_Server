@@ -1,49 +1,86 @@
-import nodemailer from "nodemailer";
+import axios from "axios";
 import config from "../../../config";
+import { activationTemplate, resetTemplate } from "./emailTemplate";
+import queryString from "query-string";
+// E-posta base url
+const url =
+  "https://graph.microsoft.com/v1.0/users/" + config.email.userID + "/sendMail";
 
 // E-posta gönderme işlevi
 export async function sendEmail(
   to: string,
   subject: string,
   text: string
-): Promise<void> {
-  console.log("to", to);
-  const transporter = nodemailer.createTransport({
-    host: config.email.HOST,
-    port: config.email.PORT,
-    secure: true,
-    auth: {
-      user: config.email.USERNAME,
-      pass: config.email.PASSWORD,
-    },
-  });
-
-  await transporter.sendMail({
-    from: config.email.USERNAME,
-    to,
-    subject,
-    text,
-  });
-}
+): Promise<void> {}
 
 export async function sendActivationCodeByEmail(
   email: string,
   activationCode: string
 ): Promise<void> {
-  const subject = "E-posta Aktivasyon Kodu";
-  const text = `Hesabınızı etkinleştirmek için kullanabileceğiniz aktivasyon kodunuz: ${activationCode}`;
+  const emailData = {
+    message: {
+      subject: "Wallet E-posta Aktivasyon Kodu",
+      body: {
+        contentType: "HTML",
+        content: activationTemplate(activationCode),
+      },
+      toRecipients: [
+        {
+          emailAddress: {
+            address: email,
+          },
+        },
+      ],
+    },
+    saveToSentItems: false,
+  };
+  try {
+    await axios.post(url, emailData, {
+      headers: {
+        Authorization: `Bearer ${await microsoftGraphApiToken()}`,
+        "Content-Type": "application/json",
+      },
+    });
 
-  await sendEmail(email, subject, text);
+    console.log("E-posta gönderildi");
+  } catch (error) {
+    console.error("E-posta gönderme hatası:", error);
+  }
 }
 
 export async function sendResetCodeByEmail(
   email: string,
   resetCode: string
 ): Promise<void> {
-  const subject = "Şifre Sıfırlama Kodu";
-  const text = `Şifre sıfırlama kodunuz: ${resetCode}`;
+  const emailData = {
+    message: {
+      subject: "Wallet Şifre Sıfırlama Kodu",
+      body: {
+        contentType: "HTML",
+        content: resetTemplate(resetCode),
+      },
+      toRecipients: [
+        {
+          emailAddress: {
+            address: email,
+          },
+        },
+      ],
+    },
+    saveToSentItems: false,
+  };
+  try {
+    await axios.post(url, emailData, {
+      headers: {
+        Authorization: `Bearer ${await microsoftGraphApiToken()}`,
+        "Content-Type": "application/json",
+      },
+    });
 
-  await sendEmail(email, subject, text);
+    console.log("E-posta gönderildi");
+  } catch (error) {
+    console.error("E-posta gönderme hatası:", error);
+  }
 }
 
 export function generateResetCode(): string {
@@ -57,4 +94,27 @@ export function generateVerificationCode(): number {
   return parseInt(
     Array.from({ length: 6 }, () => Math.floor(Math.random() * 10)).join("")
   );
+}
+
+export async function microsoftGraphApiToken() {
+  try {
+    const tokenRequestData = {
+      grant_type: "client_credentials",
+      client_id: config.email.clientId,
+      client_secret: config.email.clientSecret,
+      scope: "https://graph.microsoft.com/.default",
+    };
+    const tokenUrl = `https://login.microsoftonline.com/${config.email.tenantId}/oauth2/v2.0/token`;
+    const formData = queryString.stringify(tokenRequestData);
+    const response = await axios.post(tokenUrl, formData, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
+    const accessToken = response.data.access_token;
+    return accessToken;
+  } catch (error) {
+    console.error("Access token request error:", error);
+    throw error;
+  }
 }

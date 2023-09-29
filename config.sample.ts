@@ -11,10 +11,10 @@ const config = {
     port: 27017,
   },
   email: {
-    HOST: "smtp.yandex.com",
-    PORT: 587,
-    USERNAME: "test@idvlabs.com",
-    PASSWORD: "ZRBEG6PckJVqU9A",
+    userID: "0427f74e-4fb9-4983-9efe-8aafb9c9e3df",
+    clientId: "b94f73c8-26b3-4877-806b-f0eb01786eb4",
+    clientSecret: "vWG8Q~XBQg.22fZauGM7znog9LodkPACDmxjVcin",
+    tenantId: "e8493e19-028e-46d4-8c37-5189d1df3292",
   },
 };
 

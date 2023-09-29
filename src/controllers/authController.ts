@@ -3,8 +3,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import UserModel from "../models/User";
 import {
-  generateResetCode,
   generateVerificationCode,
+  sendActivationCodeByEmail,
 } from "../utils/email/mailService";
 import config from "../../config";
 
@@ -136,7 +136,7 @@ export async function sendVerificationCodeByEmail(req: Request, res: Response) {
     await user.save();
 
     // E-posta aktivasyon kodunu kullanıcıya gönderin
-    //  await sendActivationCodeByEmail(user.email, verificationCode);
+    await sendActivationCodeByEmail(user.email, verificationCode);
 
     return res.status(200).json({ message: "Aktivasyon kodu gönderildi." });
   } catch (error: any) {
