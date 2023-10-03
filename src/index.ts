@@ -6,6 +6,9 @@ import { Request, Response, NextFunction } from "express";
 import logger from "morgan";
 import userRoutes from "./routers/userRoutes";
 import campaingRouter from "./routers/campaingRouter";
+import transactionRouter from "./routers/transactionsRouter";
+import currencyRouter from "./routers/currencyRouter";
+import cardRouter from "./routers/cardRouters";
 
 const app = express();
 
@@ -41,7 +44,10 @@ process.on("SIGINT", () => {
 });
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api/campaing", campaingRouter);
+app.use("/api/campaign", campaingRouter);
+app.use("/api/transactions", transactionRouter);
+app.use("/api/currencies", currencyRouter);
+app.use("/api/cards", cardRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   const error: any = new Error("Not Found");
