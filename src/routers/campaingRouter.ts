@@ -11,8 +11,8 @@ import {
 
 const campaingRouter = express.Router();
 
-campaingRouter.post("/", verifyToken, createCampaign);
-campaingRouter.get("/", verifyToken, getAllCampaigns);
+campaingRouter.post("/createCampaign", verifyToken, createCampaign);
+campaingRouter.get("/getAllCampaigns", verifyToken, getAllCampaigns);
 campaingRouter.get("/:id", verifyToken, getCampaignById);
 campaingRouter.put("/:id", verifyToken, updateCampaign);
 campaingRouter.delete("/:id", verifyToken, deleteCampaign);

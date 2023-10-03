@@ -1,7 +1,6 @@
 import { prop, getModelForClass } from "@typegoose/typegoose";
-import { v4 as uuidv4 } from "uuid";
 
-class CampaignModel {
+class Campaign {
   @prop({ required: true })
   campName!: string;
 
@@ -13,9 +12,6 @@ class CampaignModel {
 
   @prop({ required: true })
   campTitle!: string;
-
-  @prop({ required: true, default: uuidv4, unique: true })
-  uuid!: string;
 }
 
-export const Campaign = getModelForClass(CampaignModel);
+export const CampaignModel = getModelForClass(Campaign);

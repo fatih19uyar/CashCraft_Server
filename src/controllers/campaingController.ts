@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Campaign } from "../models/Campaign";
+import { CampaignModel as Campaign } from "../models/Campaign";
 
 export async function createCampaign(req: Request, res: Response) {
   try {

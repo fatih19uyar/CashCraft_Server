@@ -7,12 +7,20 @@ const url =
   "https://graph.microsoft.com/v1.0/users/" + config.email.userID + "/sendMail";
 
 // E-posta gönderme işlevi
-export async function sendEmail(
-  to: string,
-  subject: string,
-  text: string
-): Promise<void> {}
+export async function sendEmail(emailData: any): Promise<void> {
+  try {
+    await axios.post(url, emailData, {
+      headers: {
+        Authorization: `Bearer ${await microsoftGraphApiToken()}`,
+        "Content-Type": "application/json",
+      },
+    });
 
+    console.log("E-posta gönderildi");
+  } catch (error) {
+    console.error("E-posta gönderme hatası:", error);
+  }
+}
 export async function sendActivationCodeByEmail(
   email: string,
   activationCode: string
@@ -34,18 +42,7 @@ export async function sendActivationCodeByEmail(
     },
     saveToSentItems: false,
   };
-  try {
-    await axios.post(url, emailData, {
-      headers: {
-        Authorization: `Bearer ${await microsoftGraphApiToken()}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    console.log("E-posta gönderildi");
-  } catch (error) {
-    console.error("E-posta gönderme hatası:", error);
-  }
+  await sendEmail(emailData);
 }
 
 export async function sendResetCodeByEmail(
@@ -69,18 +66,7 @@ export async function sendResetCodeByEmail(
     },
     saveToSentItems: false,
   };
-  try {
-    await axios.post(url, emailData, {
-      headers: {
-        Authorization: `Bearer ${await microsoftGraphApiToken()}`,
-        "Content-Type": "application/json",
-      },
-    });
-
-    console.log("E-posta gönderildi");
-  } catch (error) {
-    console.error("E-posta gönderme hatası:", error);
-  }
+  await sendEmail(emailData);
 }
 
 export function generateResetCode(): string {
