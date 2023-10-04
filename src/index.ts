@@ -48,6 +48,7 @@ app.use("/api/campaign", campaingRouter);
 app.use("/api/transactions", transactionRouter);
 app.use("/api/currencies", currencyRouter);
 app.use("/api/cards", cardRouter);
+app.use("/api/user-roles", userRoutes);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   const error: any = new Error("Not Found");
