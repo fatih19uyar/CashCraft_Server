@@ -1,4 +1,5 @@
-import { prop, getModelForClass } from "@typegoose/typegoose";
+import { prop, getModelForClass, Ref } from "@typegoose/typegoose";
+import { UserRoleModel } from "./UserRole";
 
 class User {
   @prop()
@@ -27,6 +28,9 @@ class User {
 
   @prop()
   password!: string;
+
+  @prop({ required: true, ref: () => UserRoleModel })
+  roleId!: Ref<typeof UserRoleModel>;
 }
 
 const UserModel = getModelForClass(User);
