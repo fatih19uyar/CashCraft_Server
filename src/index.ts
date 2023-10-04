@@ -9,6 +9,7 @@ import campaingRouter from "./routers/campaingRouter";
 import transactionRouter from "./routers/transactionsRouter";
 import currencyRouter from "./routers/currencyRouter";
 import cardRouter from "./routers/cardRouters";
+import userRoleRouter from "./routers/userRoleRouters";
 
 const app = express();
 
@@ -48,7 +49,7 @@ app.use("/api/campaign", campaingRouter);
 app.use("/api/transactions", transactionRouter);
 app.use("/api/currencies", currencyRouter);
 app.use("/api/cards", cardRouter);
-app.use("/api/user-roles", userRoutes);
+app.use("/api/user-roles", userRoleRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   const error: any = new Error("Not Found");
