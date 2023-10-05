@@ -1,7 +1,7 @@
-import { prop, getModelForClass, Ref } from "@typegoose/typegoose";
-import { UserRoleModel } from "./UserRole";
+import { prop, Ref, Typegoose } from "@typegoose/typegoose";
+import { UserRole } from "./UserRole";
 
-class User {
+export class User extends Typegoose {
   @prop()
   name!: string;
 
@@ -29,10 +29,10 @@ class User {
   @prop()
   password!: string;
 
-  @prop({ required: true, ref: () => UserRoleModel })
-  roleId!: Ref<typeof UserRoleModel>;
+  @prop({ required: true, ref: UserRole })
+  userRole?: Ref<UserRole>;
 }
 
-const UserModel = getModelForClass(User);
+const UserModel = new User().getModelForClass(User);
 
 export default UserModel;

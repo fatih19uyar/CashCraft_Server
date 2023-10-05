@@ -5,7 +5,9 @@ import jwt from "jsonwebtoken";
 
 export async function listUsers(req: Request, res: Response) {
   try {
-    const users = await UserModel.find({}, { password: 0 });
+    const users = await UserModel.find({}, { password: 0 })
+      .populate("userRole")
+      .exec();
     res.status(200).json(users);
   } catch (error) {
     res
@@ -19,7 +21,9 @@ export async function findUser(req: Request, res: Response) {
     const token = authorizationHeader.split(" ")[1];
     const decodedToken: any = jwt.verify(token, config.secretKey);
     const userId = decodedToken.userId;
-    const user = await UserModel.findById(userId, { password: 0 });
+    const user = await UserModel.findById(userId, { password: 0 })
+      .populate("userRole")
+      .exec();
     if (!user) {
       return res.status(404).json({ message: "Kullanıcı bulunamadı" });
     }

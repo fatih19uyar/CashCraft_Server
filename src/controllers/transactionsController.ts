@@ -17,8 +17,11 @@ export async function createTransaction(req: Request, res: Response) {
 // Tüm işlemleri listeleme
 export async function getAllTransactions(req: Request, res: Response) {
   try {
-    const transactions = await Transaction.find();
-    res.status(200).json(transactions);
+    const transaction = await Transaction.find()
+      .populate("user")
+      .populate("card")
+      .populate("currency");
+    res.status(200).json(transaction);
   } catch (error: any) {
     res
       .status(500)
@@ -30,7 +33,10 @@ export async function getAllTransactions(req: Request, res: Response) {
 export async function getTransactionById(req: Request, res: Response) {
   try {
     const { id } = req.params;
-    const transaction = await Transaction.findById(id);
+    const transaction = await Transaction.findById(id)
+      .populate("user")
+      .populate("card")
+      .populate("currency");
     if (!transaction) {
       res.status(404).json({ message: "İşlem bulunamadı" });
       return;
@@ -45,8 +51,11 @@ export async function getTransactionById(req: Request, res: Response) {
 
 export async function getTransactionByUserId(req: Request, res: Response) {
   try {
-    const { userId } = req.params;
-    const transactions = await Transaction.find({ userId: userId });
+    const { userId }: any = req.params;
+    const transactions = await Transaction.find({ userId: userId })
+      .populate("user")
+      .populate("card")
+      .populate("currency");
     if (!transactions || transactions.length === 0) {
       res.status(404).json({ message: "İşlem bulunamadı" });
       return;

@@ -1,6 +1,6 @@
-import { prop, getModelForClass, Ref } from "@typegoose/typegoose";
+import { pre, prop, Ref, Typegoose } from "@typegoose/typegoose";
 import bcrypt from "bcrypt";
-import UserModel from "./User";
+import { User } from "./User";
 
 export enum CardType {
   VISA = "VISA",
@@ -11,8 +11,16 @@ export enum CardType {
   DINERS_CLUB = "DINERS_CLUB",
   // İhtiyaca göre diğer kart türlerini buraya ekleyiniz
 }
-
-class Card {
+@pre<Card>("save", async function (next) {
+  if (this.isModified("cardNumber") || this.isModified("cardExpiration")) {
+    // Kart numarası veya son kullanma tarihi değiştiyse şifrelemeyi yap
+    const saltRounds = 10;
+    this.cardNumber = await bcrypt.hash(this.cardNumber, saltRounds);
+    this.cardExpiration = await bcrypt.hash(this.cardExpiration, saltRounds);
+  }
+  next();
+})
+export class Card extends Typegoose {
   @prop({ required: true })
   cardName!: string;
 
@@ -23,20 +31,13 @@ class Card {
   cardExpiration!: string;
 
   @prop({ required: true, enum: CardType })
-  cardType!: CardType;
+  cardType?: CardType;
 
   @prop({ required: true })
   cardNickName!: string;
 
-  @prop({ required: true, ref: () => UserModel })
-  userId!: Ref<typeof UserModel>;
-
-  async encryptSensitiveData() {
-    // cardNumber ve cardExpiration gibi bilgileri bcrypt ile şifreleyin
-    const saltRounds = 10;
-    this.cardNumber = await bcrypt.hash(this.cardNumber, saltRounds);
-    this.cardExpiration = await bcrypt.hash(this.cardExpiration, saltRounds);
-  }
+  @prop({ required: true, ref: User })
+  user?: Ref<User>;
 }
 
-export const CardModel = getModelForClass(Card);
+export const CardModel = new Card().getModelForClass(Card);

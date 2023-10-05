@@ -1,6 +1,6 @@
-import { prop, getModelForClass } from "@typegoose/typegoose";
+import { Typegoose, prop } from "@typegoose/typegoose";
 
-class Campaign {
+class Campaign extends Typegoose {
   @prop({ required: true })
   campName!: string;
 
@@ -14,4 +14,4 @@ class Campaign {
   campTitle!: string;
 }
 
-export const CampaignModel = getModelForClass(Campaign);
+export const CampaignModel = new Campaign().getModelForClass(Campaign);

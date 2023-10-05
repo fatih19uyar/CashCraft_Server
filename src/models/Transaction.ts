@@ -1,9 +1,9 @@
-import { prop, getModelForClass, Ref } from "@typegoose/typegoose";
-import UserModel from "./User";
-import { CurrencyModel } from "./Currency";
-import { CardModel } from "./Card";
+import { prop, Ref, Typegoose } from "@typegoose/typegoose";
+import { Currency } from "./Currency";
+import { Card } from "./Card";
+import { User } from "./User";
 
-class Transaction {
+class Transaction extends Typegoose {
   @prop({ required: true })
   title!: string;
 
@@ -13,17 +13,18 @@ class Transaction {
   @prop({ required: true })
   createDate!: string;
 
-  @prop({ required: true, type: () => Number }) // Burada type özelliği ile Number (float) olarak tanımlıyoruz
+  @prop({ required: true }) // Burada type özelliği ile Number (float) olarak tanımlıyoruz
   price!: number;
 
-  @prop({ required: true, ref: () => UserModel })
-  userId!: Ref<typeof UserModel>;
+  @prop({ required: true, ref: User })
+  user?: Ref<User>;
 
-  @prop({ required: true, ref: () => CurrencyModel })
-  currencyId!: Ref<typeof CurrencyModel>;
+  @prop({ required: true, ref: Currency })
+  currency?: Ref<Currency>;
 
-  @prop({ required: true, ref: () => CardModel })
-  cardId!: Ref<typeof CardModel>;
+  @prop({ required: true, ref: Card })
+  card?: Ref<Card>;
 }
 
-export const TransactionModel = getModelForClass(Transaction);
+export const TransactionModel = new Transaction().getModelForClass(Transaction);
+// "KittenModel" is now a valid Typegoose model

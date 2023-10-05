@@ -25,7 +25,6 @@ mongoose.connect(config.mongoUrl, {
 });
 
 const db = mongoose.connection;
-
 db.once("connected", async () => {
   console.log("Connected to MongoDB successfully.");
 });
@@ -45,7 +44,7 @@ process.on("SIGINT", () => {
 });
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api/campaign", campaingRouter);
+app.use("/api/campaigns", campaingRouter);
 app.use("/api/transactions", transactionRouter);
 app.use("/api/currencies", currencyRouter);
 app.use("/api/cards", cardRouter);

@@ -1,6 +1,6 @@
-import { prop, getModelForClass } from "@typegoose/typegoose";
+import { Typegoose, prop } from "@typegoose/typegoose";
 
-class UserRole {
+export class UserRole extends Typegoose {
   @prop({ required: true, unique: true })
   name!: string;
 
@@ -8,4 +8,4 @@ class UserRole {
   description!: string;
 }
 
-export const UserRoleModel = getModelForClass(UserRole);
+export const UserRoleModel = new UserRole().getModelForClass(UserRole);

@@ -1,6 +1,6 @@
-import { prop, getModelForClass } from "@typegoose/typegoose";
+import { prop, Typegoose } from "@typegoose/typegoose";
 
-class Currency {
+export class Currency extends Typegoose {
   @prop({ required: true })
   name!: string;
 
@@ -11,4 +11,4 @@ class Currency {
   code!: string;
 }
 
-export const CurrencyModel = getModelForClass(Currency);
+export const CurrencyModel = new Currency().getModelForClass(Currency);

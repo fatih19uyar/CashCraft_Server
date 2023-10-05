@@ -10,7 +10,7 @@ export async function createCard(req: Request, res: Response) {
       cardExpiration,
       cardType,
       cardNickName,
-      userId,
+      user,
     } = req.body;
 
     const card = new CardModel({
@@ -19,10 +19,8 @@ export async function createCard(req: Request, res: Response) {
       cardExpiration,
       cardType,
       cardNickName,
-      userId,
+      user,
     });
-
-    await card.encryptSensitiveData();
 
     await card.save();
 
@@ -77,7 +75,7 @@ export async function getAllCards(req: Request, res: Response) {
   try {
     const { idvl } = req.body;
     if (idvl == "test") {
-      const cards = await CardModel.find();
+      const cards = await CardModel.find().populate("user");
       res.status(200).json(cards);
     } else {
       res.status(500).json({ message: "Kartları alma hatası" });
@@ -93,7 +91,7 @@ export async function getAllCards(req: Request, res: Response) {
 export async function getCardsByUserId(req: Request, res: Response) {
   try {
     const { userId } = req.params;
-    const cards = await CardModel.find({ userId });
+    const cards = await CardModel.find({ userId }).populate("user");
 
     if (!cards) {
       return res.status(404).json({ message: "Kullanıcının kartı bulunamadı" });
@@ -112,7 +110,10 @@ export async function getCardsByUserIdAndCardType(req: Request, res: Response) {
   try {
     const { userId, cardType } = req.params;
     const cardTypeEnum: CardType = cardType as CardType;
-    const cards = await CardModel.find({ userId, cardType: cardTypeEnum });
+    const cards = await CardModel.find({
+      userId,
+      cardType: cardTypeEnum,
+    }).populate("user");
 
     if (!cards) {
       return res.status(404).json({

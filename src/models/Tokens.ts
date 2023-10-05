@@ -1,9 +1,9 @@
-import { prop, getModelForClass, Ref } from "@typegoose/typegoose";
-import UserModel from "./User";
+import { prop, Typegoose, Ref } from "@typegoose/typegoose";
+import { User } from "./User";
 
-class TokensModel {
-  @prop({ required: true, ref: () => UserModel })
-  userId!: Ref<typeof UserModel>;
+class TokensModel extends Typegoose {
+  @prop({ required: true, ref: User })
+  userId!: Ref<User>;
 
   @prop({ required: true })
   token!: string;
@@ -12,4 +12,4 @@ class TokensModel {
   validateDate!: string;
 }
 
-export const Tokens = getModelForClass(TokensModel);
+export const Tokens = new TokensModel().getModelForClass(TokensModel);
