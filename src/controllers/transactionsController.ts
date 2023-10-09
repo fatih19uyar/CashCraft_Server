@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { TransactionModel as Transaction } from "../models/Transaction";
+import jwt from "jsonwebtoken";
+import config from "../../config";
 
 // Transaction oluşturma
 export async function createTransaction(req: Request, res: Response) {
@@ -17,18 +19,20 @@ export async function createTransaction(req: Request, res: Response) {
 // Tüm işlemleri listeleme
 export async function getAllTransactions(req: Request, res: Response) {
   try {
-    const transaction = await Transaction.find()
-      .populate("user")
+    const authorizationHeader: any = req.headers.authorization;
+    const token = authorizationHeader.split(" ")[1];
+    const decodedToken: any = jwt.verify(token, config.secretKey);
+    const userId = decodedToken.userId;
+    const transactions = await Transaction.find({ user: userId })
       .populate("card")
       .populate("currency");
-    res.status(200).json(transaction);
+    res.status(200).json(transactions);
   } catch (error: any) {
     res
       .status(500)
       .json({ message: "İşlemleri alma hatası", error: error.message });
   }
 }
-
 // Belirli bir işlemi alma
 export async function getTransactionById(req: Request, res: Response) {
   try {
