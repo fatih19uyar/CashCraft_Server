@@ -65,7 +65,7 @@ export async function signIn(req: Request, res: Response) {
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
       expiresIn: "7d",
     });
-    const phoneVerificationCode: any = generateVerificationCode();
+    const phoneVerificationCode: number = generateVerificationCode();
     user.phoneVerificationCode = phoneVerificationCode;
     await user.save();
     res.status(200).json({

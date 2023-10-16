@@ -6,6 +6,7 @@ import config from "../../config";
 // Transaction oluşturma
 export async function createTransaction(req: Request, res: Response) {
   try {
+    req.body.createDate = new Date().getTime();
     const newTransaction = new Transaction(req.body);
     await newTransaction.save();
     res.status(201).json(newTransaction);
