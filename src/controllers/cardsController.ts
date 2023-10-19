@@ -96,7 +96,8 @@ export async function getCardsByUserId(req: Request, res: Response) {
     const token = authorizationHeader.split(" ")[1];
     const decodedToken: any = jwt.verify(token, config.secretKey);
     const userId = decodedToken.userId;
-    const cards = await CardModel.find({ userId }).populate("user");
+    const cards = await CardModel.find({ user: userId });
+    console.log(userId);
     if (!cards) {
       return res.status(404).json({ message: "Kullanıcının kartı bulunamadı" });
     }
