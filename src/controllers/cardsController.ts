@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { CardModel, CardType } from "../models/Card";
+import jwt from "jsonwebtoken";
+import config from "../../config";
 
 // Yeni bir kart oluşturma
 export async function createCard(req: Request, res: Response) {
@@ -90,7 +92,10 @@ export async function getAllCards(req: Request, res: Response) {
 // Belirli bir kullanıcının tüm kartlarını getirme
 export async function getCardsByUserId(req: Request, res: Response) {
   try {
-    const { userId } = req.params;
+    const authorizationHeader: any = req.headers.authorization;
+    const token = authorizationHeader.split(" ")[1];
+    const decodedToken: any = jwt.verify(token, config.secretKey);
+    const userId = decodedToken.userId;
     const cards = await CardModel.find({ userId }).populate("user");
 
     if (!cards) {
@@ -108,7 +113,11 @@ export async function getCardsByUserId(req: Request, res: Response) {
 // Belirli bir kullanıcının belirli bir kart türündeki kartlarını getirme
 export async function getCardsByUserIdAndCardType(req: Request, res: Response) {
   try {
-    const { userId, cardType } = req.params;
+    const { cardType } = req.params;
+    const authorizationHeader: any = req.headers.authorization;
+    const token = authorizationHeader.split(" ")[1];
+    const decodedToken: any = jwt.verify(token, config.secretKey);
+    const userId = decodedToken.userId;
     const cardTypeEnum: CardType = cardType as CardType;
     const cards = await CardModel.find({
       userId,

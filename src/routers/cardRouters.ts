@@ -15,9 +15,9 @@ cardRouter.post("/createCard", verifyToken, createCard); // Yeni kart oluşturma
 cardRouter.put("/:id", verifyToken, updateCard); // Kart güncelleme
 cardRouter.delete("/:id", verifyToken, deleteCard); // Kart silme
 cardRouter.get("/getAllCards", verifyToken, getAllCards); // Tüm kartları getirme
-cardRouter.get("/getCardsByUserId/:userId", verifyToken, getCardsByUserId); // Belirli bir kullanıcının tüm kartlarını getirme
+cardRouter.get("/getCardsByUser", verifyToken, getCardsByUserId); // Belirli bir kullanıcının tüm kartlarını getirme
 cardRouter.get(
-  "/getCardsByUserIdAndCardType/:userId/:cardType",
+  "/getCardsByUserIdAndCardType/:cardType",
   verifyToken,
   getCardsByUserIdAndCardType
 ); // Belirli bir kullanıcının belirli bir kart türündeki kartlarını getirme
