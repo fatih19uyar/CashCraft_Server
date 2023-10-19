@@ -64,7 +64,7 @@ export async function deleteCard(req: Request, res: Response) {
       return res.status(404).json({ message: "Kart bulunamadı" });
     }
 
-    res.status(204).send();
+    res.status(204).json({ message: "deleted" });
   } catch (error: any) {
     res
       .status(500)
@@ -97,7 +97,6 @@ export async function getCardsByUserId(req: Request, res: Response) {
     const decodedToken: any = jwt.verify(token, config.secretKey);
     const userId = decodedToken.userId;
     const cards = await CardModel.find({ userId }).populate("user");
-
     if (!cards) {
       return res.status(404).json({ message: "Kullanıcının kartı bulunamadı" });
     }

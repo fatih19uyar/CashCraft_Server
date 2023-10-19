@@ -11,6 +11,13 @@ export enum CardType {
   DINERS_CLUB = "DINERS_CLUB",
   // İhtiyaca göre diğer kart türlerini buraya ekleyiniz
 }
+export enum CardStyle {
+  GIFT = "gift",
+  STORE = "store",
+  BANK = "bank",
+  CREDIT = "credit",
+  // İhtiyaca göre diğer kart style buraya ekleyiniz
+}
 @pre<Card>("save", async function (next) {
   if (this.isModified("cardNumber") || this.isModified("cardExpiration")) {
     // Kart numarası veya son kullanma tarihi değiştiyse şifrelemeyi yap
@@ -32,6 +39,9 @@ export class Card extends Typegoose {
 
   @prop({ required: true, enum: CardType })
   cardType?: CardType;
+
+  @prop({ required: true, enum: CardType })
+  cardStyle?: CardStyle;
 
   @prop({ required: true })
   cardNickName!: string;
