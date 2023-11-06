@@ -5,6 +5,30 @@ import { verifyToken } from "../middleware/authMiddleWare";
 
 const paymentRouter = express.Router();
 
-paymentRouter.post("/makePayment", verifyToken, PaymentController.makePayment);
+paymentRouter.post(
+  "/creditCardPayment",
+  verifyToken,
+  PaymentController.creditCardPayment
+);
+paymentRouter.post(
+  "/debitCardPayment",
+  verifyToken,
+  PaymentController.debitCardPayment
+);
+paymentRouter.put(
+  "/deposit/:userId",
+  verifyToken,
+  PaymentController.depositToAccount
+);
+paymentRouter.get(
+  "/getAccountInfo/:userId",
+  verifyToken,
+  PaymentController.getAccountInfo
+);
+paymentRouter.put(
+  "/withdraw/:userId",
+  verifyToken,
+  PaymentController.withdrawFromAccount
+);
 
 export default paymentRouter;
