@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import axios from "axios";
 
-const BASE_URL = "https://wallet-bank-server.idvlabs.com/"; // API'nin taban URL'si
+const BASE_URL = "https://wallet-bank-server.idvlabs.com"; // API'nin taban URL'si
 
 const PaymentController = {
   async creditCardPayment(req: Request, res: Response): Promise<void> {

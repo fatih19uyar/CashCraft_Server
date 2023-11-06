@@ -50,7 +50,7 @@ app.use("/api/transactions", transactionRouter);
 app.use("/api/currencies", currencyRouter);
 app.use("/api/cards", cardRouter);
 app.use("/api/user-roles", userRoleRouter);
-app.use("/api/payment", paymentRouter);
+app.use("/api/payments", paymentRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   const error: any = new Error("Not Found");
