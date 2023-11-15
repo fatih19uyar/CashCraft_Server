@@ -16,7 +16,7 @@ export async function signUp(req: Request, res: Response) {
     // Şifreyi şifreleyin
     const hashedPassword = await bcrypt.hash(password, 6);
     const existingUser: any = await UserModel.findOne({ email });
-    if (existingUser.name) {
+    if (existingUser && existingUser.name != null) {
       return res
         .status(400)
         .json({ message: "Bu e-posta zaten kullanılıyor." });

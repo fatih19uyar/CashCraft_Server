@@ -70,3 +70,5 @@ app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
 app.listen(config.httpPort, () => {
   console.log(`Server running on ${config.httpPort} port.`);
 });
+
+export default app;
