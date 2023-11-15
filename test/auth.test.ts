@@ -14,28 +14,28 @@ describe("Authentication Endpoints", () => {
       .request(app)
       .post("/api/auth/sendEmailActivationCode")
       .send({
-        email: "fatihuyar39@gmail.com",
+        email: "testuser@gmail.com",
       });
 
     expect(emailVerificationRes).to.have.status(200);
 
-    const user = await UserModel.findOne({ email: "fatihuyar39@gmail.com" });
+    const user = await UserModel.findOne({ email: "testuser@gmail.com" });
 
     const verificationCode = await chai
       .request(app)
       .post("/api/auth/verifyEmailActivationCode")
       .send({
-        email: "fatihuyar39@gmail.com",
+        email: "testuser@gmail.com",
         verificationCode: user?.verificationCode,
       });
 
     expect(verificationCode).to.have.status(200);
 
     const res = await chai.request(app).post("/api/auth/signup").send({
-      name: "fatih uyar",
+      name: "test user",
       phoneNumber: "123-456-7890",
       photo: "user.jpg",
-      email: "fatihuyar39@gmail.com",
+      email: "testuser@gmail.com",
       password: "123123",
     });
 
@@ -46,7 +46,7 @@ describe("Authentication Endpoints", () => {
   // Kullanıcı girişi testi
   it("should authenticate an existing user", async () => {
     const res = await chai.request(app).post("/api/auth/signin").send({
-      email: "fatihuyar39@gmail.com",
+      email: "testuser@gmail.com",
       password: "123123",
     });
 
@@ -58,6 +58,6 @@ describe("Authentication Endpoints", () => {
   after(async () => {
     console.log("deleted user");
     // Örnek olarak, test için oluşturulan kullanıcıyı silebilirsiniz
-    await UserModel.deleteOne({ email: "fatihuyar39@gmail.com" });
+    await UserModel.deleteOne({ email: "testuser@gmail.com" });
   });
 });
