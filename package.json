@@ -9,6 +9,7 @@
     "test:auth": "mocha --require ts-node/register 'test/auth.test.ts' --timeout 5000",
     "test:user": "mocha --require ts-node/register 'test/user.test.ts' --timeout 5000",
     "test:campaign": "mocha --require ts-node/register 'test/campaign.test.ts' --timeout 5000",
+    "test:transaction": "mocha --require ts-node/register 'test/transaction.test.ts' --timeout 5000",
     "test:all": "npm run test:auth && npm run test:user && npm run test:campaign"
   },
   "keywords": [],
