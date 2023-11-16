@@ -40,7 +40,7 @@ export class Card extends Typegoose {
   @prop({ required: true, enum: CardType })
   cardType?: CardType;
 
-  @prop({ required: true, enum: CardType })
+  @prop({ required: true, enum: CardStyle })
   cardStyle?: CardStyle;
 
   @prop({ required: true })

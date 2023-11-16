@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { CardModel, CardType } from "../models/Card";
+import { Card, CardModel, CardStyle, CardType } from "../models/Card";
 import jwt from "jsonwebtoken";
 import config from "../../config";
 
@@ -12,9 +12,10 @@ export async function createCard(req: Request, res: Response) {
       cardExpiration,
       cardType,
       cardNickName,
+      cardStyle,
       user,
     } = req.body;
-
+    console.log("aa");
     const card = new CardModel({
       cardName,
       cardNumber,
@@ -22,6 +23,7 @@ export async function createCard(req: Request, res: Response) {
       cardType,
       cardNickName,
       user,
+      cardStyle: cardStyle as CardStyle,
     });
 
     await card.save();
