@@ -57,7 +57,6 @@ describe("Authentication Endpoints", () => {
   // Test sonunda kullanıcıyı temizle
   after(async () => {
     console.log("deleted user");
-    // Örnek olarak, test için oluşturulan kullanıcıyı silebilirsiniz
     await UserModel.deleteOne({ email: "testuser@gmail.com" });
   });
 });

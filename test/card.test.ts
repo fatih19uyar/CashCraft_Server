@@ -1,6 +1,6 @@
 import chai from "chai";
 import chaiHttp from "chai-http";
-import app from "../src/index"; // app'inizin doğru yolunu kontrol edin
+import app from "../src/index";
 import UserModel from "../src/models/User";
 import { CardModel } from "../src/models/Card";
 
@@ -125,7 +125,6 @@ describe("Card Endpoints", () => {
   });
 
   after(async () => {
-    // Test için oluşturulan kullanıcıyı ve kartı silebilirsiniz
     await UserModel.deleteOne({ email: "testuser@gmail.com" });
     await CardModel.findByIdAndDelete(createdCardId);
   });

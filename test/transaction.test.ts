@@ -1,6 +1,6 @@
 import chai from "chai";
 import chaiHttp from "chai-http";
-import app from "../src/index"; // app'inizin doğru yolunu kontrol edin
+import app from "../src/index";
 import UserModel from "../src/models/User";
 import { TransactionModel } from "../src/models/Transaction";
 

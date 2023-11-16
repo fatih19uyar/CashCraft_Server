@@ -89,7 +89,6 @@ describe("Campaign Endpoints", () => {
   // Test sonunda kullanıcıyı ve eklenen kampanyayı temizle
   after(async () => {
     console.log("deleted user and campaign");
-    // Test için oluşturulan kullanıcıyı ve kampanyayı silebilirsiniz
     await UserModel.deleteOne({ email: "testuser@gmail.com" });
     await CampaignModel.findByIdAndDelete(createdCampaignId);
   });
