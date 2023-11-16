@@ -6,7 +6,10 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "dev": "nodemon --exec ts-node src/index.ts",
-    "test:auth": "mocha --require ts-node/register 'test/**/*.test.ts' --timeout 5000"
+    "test:auth": "mocha --require ts-node/register 'test/auth.test.ts' --timeout 5000",
+    "test:user": "mocha --require ts-node/register 'test/user.test.ts' --timeout 5000",
+    "test:campaign": "mocha --require ts-node/register 'test/campaign.test.ts' --timeout 5000",
+    "test:all": "npm run test:auth && npm run test:user && npm run test:campaign"
   },
   "keywords": [],
   "author": "",
