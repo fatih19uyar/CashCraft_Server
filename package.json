@@ -7,12 +7,12 @@
     "start": "ts-node src/index.ts",
     "dev": "nodemon --exec ts-node src/index.ts",
     "test:auth": "mocha --require ts-node/register 'test/auth.test.ts' --timeout 5000",
-    "test:user": "mocha --require ts-node/register 'test/user.test.ts' --timeout 5000",
     "test:campaign": "mocha --require ts-node/register 'test/campaign.test.ts' --timeout 5000",
     "test:transaction": "mocha --require ts-node/register 'test/transaction.test.ts' --timeout 5000",
     "test:card": "mocha --require ts-node/register 'test/card.test.ts' --timeout 5000",
     "test:currency": "mocha --require ts-node/register 'test/currency.test.ts' --timeout 5000",
-    "test:all": "npm run test:auth && npm run test:user && npm run test:campaign"
+    "test:payment": "mocha --require ts-node/register 'test/payment.test.ts' --timeout 5000",
+    "test:all": "npm run test:auth && npm run test:campaign && npm run test:transaction && npm run test:card && npm run test:currency && npm run test:payment"
   },
   "keywords": [],
   "author": "",

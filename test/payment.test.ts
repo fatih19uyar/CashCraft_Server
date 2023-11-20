@@ -1,15 +1,14 @@
 import chai from "chai";
 import chaiHttp from "chai-http";
-import app from "../src/index";
+import app from "../src/index"; // Uygulamanızın doğru yolunu kontrol edin
 import UserModel from "../src/models/User";
-import { CardModel } from "../src/models/Card";
 
 chai.use(chaiHttp);
 const expect = chai.expect;
 
-describe("Card Endpoints", () => {
+describe("Payment Endpoints", () => {
   let authToken: string;
-  let createdCardId: string;
+  let userId: string;
 
   it("should register a new user", async () => {
     const emailVerificationRes = await chai
@@ -42,6 +41,7 @@ describe("Card Endpoints", () => {
     });
     expect(res).to.have.status(201);
     expect(res.body).to.have.property("token");
+    userId = user?._id;
     authToken = res.body.token;
   });
 
@@ -56,75 +56,73 @@ describe("Card Endpoints", () => {
     expect(res.body).to.have.property("token");
   });
 
-  it("should create a new card", async () => {
-    const user: any = await UserModel.find({ email: "testuser@gmail.com" });
+  it("should make a credit card payment", async () => {
     const res = await chai
       .request(app)
-      .post("/api/cards/createCard")
+      .post("/api/payments/creditCardPayment")
       .set("Authorization", `Bearer ${authToken}`)
       .send({
-        cardName: "Test Demo",
-        cardNumber: "3311 1111 1111 1111",
-        cardExpiration: "12/23",
-        cardType: "VISA",
-        cardStyle: "bank",
-        cardNickName: "Test Visa Card",
-        user: user?._id,
-      });
-
-    expect(res).to.have.status(201);
-    expect(res.body).to.have.property("_id");
-
-    // Eklenen kartın ID'sini sakla
-    createdCardId = res.body._id;
-  });
-
-  it("should get cards by user ID", async () => {
-    const res = await chai
-      .request(app)
-      .get("/api/cards/getCardsByUser")
-      .set("Authorization", `Bearer ${authToken}`);
-
-    expect(res).to.have.status(200);
-    expect(res.body).to.be.an("array");
-  });
-
-  it("should get cards by user ID and card type", async () => {
-    const cardType = "VISA"; // Test için uygun bir kart tipi belirtin
-    const res = await chai
-      .request(app)
-      .get(`/api/cards/getCardsByUserIdAndCardType/${cardType}`)
-      .set("Authorization", `Bearer ${authToken}`);
-
-    expect(res).to.have.status(200);
-    expect(res.body).to.be.an("array");
-  });
-
-  it("should update a card", async () => {
-    const res = await chai
-      .request(app)
-      .put(`/api/cards/${createdCardId}`)
-      .set("Authorization", `Bearer ${authToken}`)
-      .send({
-        cardName: "Demo Demo",
-        cardNickName: "Demo Visa Card",
+        creditCardNumber: "1000100010001000",
+        cvv: "123",
+        amount: "100",
       });
 
     expect(res).to.have.status(200);
-    expect(res.body).to.have.property("_id");
+    expect(res.body).to.have.property("success").to.be.true;
   });
 
-  it("should delete a card", async () => {
+  it("should make a debit card payment", async () => {
     const res = await chai
       .request(app)
-      .delete(`/api/cards/${createdCardId}`)
+      .post("/api/payments/debitCardPayment")
+      .set("Authorization", `Bearer ${authToken}`)
+      .send({
+        creditCardNumber: "1000100010001000",
+        cvv: "123",
+        amount: "100",
+      });
+
+    expect(res).to.have.status(200);
+    expect(res.body).to.have.property("success").to.be.true;
+  });
+
+  it("should deposit to account", async () => {
+    const res = await chai
+      .request(app)
+      .put("/api/payments/deposit/" + userId) // user ID'sini değiştirin
+      .set("Authorization", `Bearer ${authToken}`)
+      .send({
+        amount: "200", // Örnek olarak yatırılacak miktarı ekleyin
+      });
+
+    expect(res).to.have.status(200);
+    expect(res.body).to.have.property("success").to.be.true;
+  });
+
+  it("should get account info", async () => {
+    const res = await chai
+      .request(app)
+      .get("/api/payments/getAccountInfo/" + userId) // user ID'sini değiştirin
       .set("Authorization", `Bearer ${authToken}`);
 
-    expect(res).to.have.status(204);
+    expect(res).to.have.status(200);
+    expect(res.body).to.have.property("success").to.be.true;
+  });
+
+  it("should withdraw from account", async () => {
+    const res = await chai
+      .request(app)
+      .put("/api/payments/withdraw/" + userId) // user ID'sini değiştirin
+      .set("Authorization", `Bearer ${authToken}`)
+      .send({
+        amount: "50", // Örnek olarak çekilecek miktarı ekleyin
+      });
+
+    expect(res).to.have.status(200);
+    expect(res.body).to.have.property("success").to.be.true;
   });
 
   after(async () => {
     await UserModel.deleteOne({ email: "testuser@gmail.com" });
-    await CardModel.findByIdAndDelete(createdCardId);
   });
 });
