@@ -6,12 +6,10 @@ export async function createUserRole(req: Request, res: Response) {
     const newUserRole = await UserRole.create(req.body);
     res.status(201).json(newUserRole);
   } catch (error: any) {
-    res
-      .status(500)
-      .json({
-        message: "Kullanıcı rolü oluşturma hatası",
-        error: error.message,
-      });
+    res.status(500).json({
+      message: "Kullanıcı rolü oluşturma hatası",
+      error: error.message,
+    });
   }
 }
 
