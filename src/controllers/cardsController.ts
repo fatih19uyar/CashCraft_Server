@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import { Card, CardModel, CardStyle, CardType } from "../models/Card";
+import { Card, CardModel } from "../models/Card";
 import jwt from "jsonwebtoken";
 import config from "../../config";
+import { CardStyle, CardType } from "../types/type";
 
 // Yeni bir kart oluşturma
 export async function createCard(req: Request, res: Response) {

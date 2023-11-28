@@ -16,3 +16,22 @@ export interface CardData {
   cardNickName: string;
   cardStyle: "gift" | "store" | "bank" | "credit";
 }
+export enum CardType {
+  VISA = "VISA",
+  MASTERCARD = "MASTERCARD",
+  AMEX = "AMEX",
+  DISCOVER = "DISCOVER",
+  JCB = "JCB",
+  DINERS_CLUB = "DINERS_CLUB",
+}
+export enum CardStyle {
+  GIFT = "gift",
+  STORE = "store",
+  BANK = "bank",
+  CREDIT = "credit",
+}
+export enum TransactionStatus {
+  COMPLETED = "COMPLETED",
+  PENDING = "PENDING",
+  CANCELLED = "CANCELLED",
+}

@@ -2,6 +2,7 @@ import { prop, Ref, Typegoose } from "@typegoose/typegoose";
 import { Currency } from "./Currency";
 import { Card } from "./Card";
 import { User } from "./User";
+import { TransactionStatus } from "../types/type";
 
 class Transaction extends Typegoose {
   @prop({ required: true })
@@ -24,6 +25,12 @@ class Transaction extends Typegoose {
 
   @prop({ required: true, ref: Card })
   card?: Ref<Card>;
+
+  @prop({ required: true })
+  qrCode!: string;
+
+  @prop({ required: true, enum: TransactionStatus })
+  status?: TransactionStatus;
 }
 
 export const TransactionModel = new Transaction().getModelForClass(Transaction);

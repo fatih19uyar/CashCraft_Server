@@ -2,11 +2,16 @@ import { Request, Response } from "express";
 import { TransactionModel as Transaction } from "../models/Transaction";
 import jwt from "jsonwebtoken";
 import config from "../../config";
+import { generateQRCode } from "../utils/qrCode";
+import { TransactionStatus } from "../types/type";
 
 // Transaction oluşturma
 export async function createTransaction(req: Request, res: Response) {
   try {
+    const qrCodeDataUrl = await generateQRCode(JSON.stringify(req.body));
+    req.body.qrCode = qrCodeDataUrl;
     req.body.createDate = new Date().getTime();
+    req.body.status = TransactionStatus.PENDING;
     const newTransaction = new Transaction(req.body);
     await newTransaction.save();
     res.status(201).json(newTransaction);
