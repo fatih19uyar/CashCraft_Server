@@ -35,3 +35,7 @@ export enum TransactionStatus {
   PENDING = "PENDING",
   CANCELLED = "CANCELLED",
 }
+export enum LoginRecordType {
+  SIGNIN = "SIGNIN",
+  SIGNOUT = "SIGNOUT",
+}

@@ -1,20 +1,24 @@
 import { Request, Response } from "express";
 import { LoginRecordModel } from "../models/LoginRecord";
+import { Ref } from "@typegoose/typegoose";
+import UserModel, { User } from "../models/User";
+import { Types } from "mongoose";
 
 export const createLoginRecord = async (req: Request, res: Response) => {
   try {
-    const { userId, loginTime, ipAddress, deviceInfo } = req.body;
+    const { userId, loginTime, ipAddress, deviceInfo, type } = req.body;
 
     const newLoginRecord = new LoginRecordModel({
       user: userId,
       loginTime,
       ipAddress,
       deviceInfo,
+      type,
     });
 
     await newLoginRecord.save();
 
-    res.status(201).json(newLoginRecord);
+    res.status(201).json({ message: "Login kaydı başarıyla oluşturuldu" });
   } catch (error: any) {
     console.error("Login kaydı oluşturulurken bir hata oluştu:", error);
     res
@@ -23,61 +27,24 @@ export const createLoginRecord = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllLoginRecords = async (req: Request, res: Response) => {
-  try {
-    const loginRecords = await LoginRecordModel.find().populate("user");
-    res.status(200).json(loginRecords);
-  } catch (error: any) {
-    console.error("Login kayıtları getirilirken bir hata oluştu:", error);
-    res.status(500).json({
-      message: "Login kayıtları getirme hatası",
-      error: error.message,
-    });
-  }
-};
-
-export const getLoginRecordById = async (req: Request, res: Response) => {
-  const loginRecordId = req.params.id;
-
-  try {
-    const loginRecord = await LoginRecordModel.findById(loginRecordId).populate(
-      "user"
-    );
-
-    if (!loginRecord) {
-      return res.status(404).json({ message: "Login kaydı bulunamadı" });
-    }
-
-    res.status(200).json(loginRecord);
-  } catch (error: any) {
-    console.error("Login kaydı getirilirken bir hata oluştu:", error);
-    res
-      .status(500)
-      .json({ message: "Login kaydı getirme hatası", error: error.message });
-  }
-};
-
 export const updateLoginRecord = async (req: Request, res: Response) => {
   const loginRecordId = req.params.id;
-  const { userId, loginTime, ipAddress, deviceInfo } = req.body;
+  const { userId, loginTime, ipAddress, deviceInfo, type } = req.body;
 
   try {
-    const updatedLoginRecord = await LoginRecordModel.findByIdAndUpdate(
+    await LoginRecordModel.findByIdAndUpdate(
       loginRecordId,
       {
         user: userId,
         loginTime,
         ipAddress,
         deviceInfo,
+        type,
       },
       { new: true }
     );
 
-    if (!updatedLoginRecord) {
-      return res.status(404).json({ message: "Login kaydı bulunamadı" });
-    }
-
-    res.status(200).json(updatedLoginRecord);
+    res.status(200).json({ message: "Login kaydı başarıyla güncellendi" });
   } catch (error: any) {
     console.error("Login kaydı güncellenirken bir hata oluştu:", error);
     res
@@ -85,24 +52,27 @@ export const updateLoginRecord = async (req: Request, res: Response) => {
       .json({ message: "Login kaydı güncelleme hatası", error: error.message });
   }
 };
-
-export const deleteLoginRecord = async (req: Request, res: Response) => {
-  const loginRecordId = req.params.id;
-
+export const getLastLogin = async (req: Request, res: Response) => {
   try {
-    const deletedLoginRecord = await LoginRecordModel.findByIdAndDelete(
-      loginRecordId
-    );
+    const { userId, type } = req.params;
+    const user = await UserModel.findById(userId);
 
-    if (!deletedLoginRecord) {
-      return res.status(404).json({ message: "Login kaydı bulunamadı" });
+    if (!user) {
+      return res.status(404).json({ message: "Kullanıcı bulunamadı" });
     }
+    const lastLoginRecord = await LoginRecordModel.findOne({ user: user })
+      .sort({ loginTime: -1 })
+      .limit(1);
 
-    res.status(200).json({ message: "Login kaydı başarıyla silindi" });
+    if (!lastLoginRecord) {
+      return res.status(404).json({ message: "Son oturum açma bulunamadı" });
+    }
+    res.status(200).json(lastLoginRecord);
   } catch (error: any) {
-    console.error("Login kaydı silinirken bir hata oluştu:", error);
-    res
-      .status(500)
-      .json({ message: "Login kaydı silme hatası", error: error.message });
+    console.error("Son oturum açma getirilirken bir hata oluştu:", error);
+    res.status(500).json({
+      message: "Son oturum açma getirme hatası",
+      error: error.message,
+    });
   }
 };

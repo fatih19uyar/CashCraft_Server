@@ -1,5 +1,6 @@
-import { Typegoose, prop, Ref } from "@typegoose/typegoose";
+import { prop, Ref, Typegoose } from "@typegoose/typegoose";
 import { User } from "./User";
+import { LoginRecordType } from "../types/type";
 
 class LoginRecord extends Typegoose {
   @prop({ required: true, ref: User })
@@ -7,6 +8,9 @@ class LoginRecord extends Typegoose {
 
   @prop({ required: true })
   loginTime!: Date;
+
+  @prop({ required: true, enum: LoginRecordType })
+  type!: LoginRecordType;
 
   @prop({ required: true })
   ipAddress!: string;
