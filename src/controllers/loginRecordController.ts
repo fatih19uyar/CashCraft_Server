@@ -1,16 +1,23 @@
 import { Request, Response } from "express";
 import { LoginRecordModel } from "../models/LoginRecord";
-import { Ref } from "@typegoose/typegoose";
-import UserModel, { User } from "../models/User";
-import { Types } from "mongoose";
+import UserModel from "../models/User";
+import jwt from "jsonwebtoken";
+import config from "../../config";
 
 export const createLoginRecord = async (req: Request, res: Response) => {
   try {
-    const { userId, loginTime, ipAddress, deviceInfo, type } = req.body;
-
+    const token = req.header("Authorization");
+    if (!token) {
+      return res
+        .status(401)
+        .json({ message: "Yetkilendirme başarısız: Token bulunamadı" });
+    }
+    const decodedToken: any = jwt.verify(token, config.secretKey);
+    const userId = decodedToken.userId;
+    const { ipAddress, deviceInfo, type } = req.body;
     const newLoginRecord = new LoginRecordModel({
       user: userId,
-      loginTime,
+      loginTime: new Date(),
       ipAddress,
       deviceInfo,
       type,
@@ -28,15 +35,23 @@ export const createLoginRecord = async (req: Request, res: Response) => {
 };
 
 export const updateLoginRecord = async (req: Request, res: Response) => {
-  const loginRecordId = req.params.id;
-  const { userId, loginTime, ipAddress, deviceInfo, type } = req.body;
-
   try {
+    const token = req.header("Authorization");
+    if (!token) {
+      return res
+        .status(401)
+        .json({ message: "Yetkilendirme başarısız: Token bulunamadı" });
+    }
+    const decodedToken: any = jwt.verify(token, config.secretKey);
+    const userId = decodedToken.userId;
+    const loginRecordId = req.params.id;
+    const { ipAddress, deviceInfo, type } = req.body;
+
     await LoginRecordModel.findByIdAndUpdate(
       loginRecordId,
       {
         user: userId,
-        loginTime,
+        loginTime: new Date(),
         ipAddress,
         deviceInfo,
         type,
