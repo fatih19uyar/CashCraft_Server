@@ -11,6 +11,7 @@ import currencyRouter from "./routers/currencyRouter";
 import cardRouter from "./routers/cardRouters";
 import userRoleRouter from "./routers/userRoleRouters";
 import paymentRouter from "./routers/paymentRouter";
+import loginRecordRouter from "./routers/loginRecordRouter";
 
 const app = express();
 
@@ -51,6 +52,7 @@ app.use("/api/currencies", currencyRouter);
 app.use("/api/cards", cardRouter);
 app.use("/api/userRoles", userRoleRouter);
 app.use("/api/payments", paymentRouter);
+app.use("/api/loginRecord", loginRecordRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   const error: any = new Error("Not Found");
