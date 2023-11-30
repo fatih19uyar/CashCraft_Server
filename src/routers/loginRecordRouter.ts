@@ -8,7 +8,7 @@ import { verifyToken } from "../middleware/authMiddleWare";
 
 const loginRecordRouter = express.Router();
 
-loginRecordRouter.post("/createLoginRecord", verifyToken, createLoginRecord);
+loginRecordRouter.post("/createLoginRecord", createLoginRecord);
 loginRecordRouter.put("/:id", verifyToken, updateLoginRecord);
 loginRecordRouter.get("/lastLogin/:userId/:type", verifyToken, getLastLogin);
 

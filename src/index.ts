@@ -52,7 +52,7 @@ app.use("/api/currencies", currencyRouter);
 app.use("/api/cards", cardRouter);
 app.use("/api/userRoles", userRoleRouter);
 app.use("/api/payments", paymentRouter);
-app.use("/api/loginRecord", loginRecordRouter);
+app.use("/api/loginRecords", loginRecordRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   const error: any = new Error("Not Found");

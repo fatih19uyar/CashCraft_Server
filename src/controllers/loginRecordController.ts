@@ -6,15 +6,7 @@ import config from "../../config";
 
 export const createLoginRecord = async (req: Request, res: Response) => {
   try {
-    const token = req.header("Authorization");
-    if (!token) {
-      return res
-        .status(401)
-        .json({ message: "Yetkilendirme başarısız: Token bulunamadı" });
-    }
-    const decodedToken: any = jwt.verify(token, config.secretKey);
-    const userId = decodedToken.userId;
-    const { ipAddress, deviceInfo, type } = req.body;
+    const { ipAddress, deviceInfo, type, userId } = req.body;
     const newLoginRecord = new LoginRecordModel({
       user: userId,
       loginTime: new Date(),
