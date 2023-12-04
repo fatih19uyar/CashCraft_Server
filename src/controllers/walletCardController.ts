@@ -1,8 +1,56 @@
 import { Request, Response } from "express";
 import { WalletCardModel } from "../models/WalletCards";
 import { CardStatus, TransactionStatus } from "../types/type";
-import UserModel from "../models/User";
+import UserModel, { User } from "../models/User";
 import { TransactionModel } from "../models/Transaction";
+import { generateRandomNumericCardNumber } from "../utils/randomGenerate";
+import { CurrencyModel } from "../models/Currency";
+import { Ref } from "@typegoose/typegoose";
+
+export const createWalletCard = async (
+  userId: string
+): Promise<{
+  success: boolean;
+  message?: string;
+  walletCard?: any;
+}> => {
+  try {
+    const user: any = await UserModel.findById(userId);
+    const existingCard = await WalletCardModel.findOne({ user: user });
+    if (existingCard) {
+      return {
+        success: false,
+        message: "Kullanıcı zaten bir cüzdan kartına sahip",
+      };
+    }
+    const currency = await CurrencyModel.findOne({ symbol: "₺" });
+    if (!currency) {
+      return {
+        success: false,
+        message: "TL para birimi bulunamadı",
+      };
+    }
+    const cardNumber = generateRandomNumericCardNumber(16);
+    const newWalletCard = new WalletCardModel({
+      cardNumber,
+      user: userId,
+      currency: currency._id,
+    });
+    await newWalletCard.save();
+
+    return {
+      success: true,
+      message: "Yeni cüzdan kartı başarıyla oluşturuldu",
+      walletCard: newWalletCard,
+    };
+  } catch (error) {
+    console.error("Cüzdan kartı oluşturulurken bir hata oluştu:", error);
+    return {
+      success: false,
+      message: "Cüzdan kartı oluşturma hatası",
+    };
+  }
+};
 
 export const getWalletCardByUserId = async (req: Request, res: Response) => {
   try {
@@ -16,27 +64,31 @@ export const getWalletCardByUserId = async (req: Request, res: Response) => {
     const walletCard = await WalletCardModel.findOne({
       user: user._id,
       cardStatus: CardStatus.ACTIVE,
-    });
+    }).populate("currency");
 
     if (!walletCard) {
       return res.status(404).json({ message: "Wallet card not found" });
     }
 
+    // currency bilgisini ayrı bir sorgu ile çek
+    const currency = await CurrencyModel.findById(walletCard.currency);
+
+    // currency bilgisini sadece code olarak al
     const {
       user: userField,
       _id,
       ...walletCardWithoutUser
     } = walletCard.toObject();
 
-    res.status(200).json(walletCardWithoutUser);
+    res.status(200).json({
+      ...walletCardWithoutUser,
+      currency: currency?.code || "",
+    });
   } catch (error) {
     console.error("Error while getting wallet card:", error);
-    res
-      .status(500)
-      .json({ message: "Error while getting wallet card", error: error });
+    res.status(500).json({ message: "Error while getting wallet card", error });
   }
 };
-
 export const updateWalletCardBalance = async (req: Request, res: Response) => {
   try {
     const userId = req.userId;

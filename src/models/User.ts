@@ -1,13 +1,11 @@
 import { prop, Ref, Typegoose, post } from "@typegoose/typegoose";
 import { UserRole } from "./UserRole";
-import { WalletCardModel } from "./WalletCards";
 import { generateRandomNumericCardNumber } from "../utils/randomGenerate";
+import { createWalletCard } from "../controllers/walletCardController";
 
 @post<User>("save", async (doc) => {
   try {
-    const cardNumber = generateRandomNumericCardNumber(16);
-    const walletCard = new WalletCardModel({ cardNumber, user: doc._id });
-    await walletCard.save();
+    await createWalletCard(doc._id);
   } catch (error) {
     console.error("Wallet Card oluşturulurken hata:", error);
   }
