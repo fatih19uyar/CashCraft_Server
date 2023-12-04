@@ -8,19 +8,27 @@ export const getWalletCardByUserId = async (req: Request, res: Response) => {
   try {
     const userId = req.userId;
     const user = await UserModel.findById(userId);
+
     if (!user) {
       return res.status(404).json({ message: "Kullanıcı bulunamadı" });
     }
+
     const walletCard = await WalletCardModel.findOne({
       user: user._id,
       cardStatus: CardStatus.ACTIVE,
     });
-    console.log(walletCard);
+
     if (!walletCard) {
       return res.status(404).json({ message: "Wallet card not found" });
     }
 
-    res.status(200).json(walletCard);
+    const {
+      user: userField,
+      _id,
+      ...walletCardWithoutUser
+    } = walletCard.toObject();
+
+    res.status(200).json(walletCardWithoutUser);
   } catch (error) {
     console.error("Error while getting wallet card:", error);
     res
