@@ -39,3 +39,7 @@ export enum LoginRecordType {
   SIGNIN = "SIGNIN",
   SIGNOUT = "SIGNOUT",
 }
+export enum CardStatus {
+  ACTIVE = "active",
+  INACTIVE = "inactive",
+}

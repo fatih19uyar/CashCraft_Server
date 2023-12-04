@@ -29,7 +29,10 @@ export async function getAllTransactions(req: Request, res: Response) {
     const token = authorizationHeader.split(" ")[1];
     const decodedToken: any = jwt.verify(token, config.secretKey);
     const userId = decodedToken.userId;
-    const transactions = await Transaction.find({ user: userId })
+    const transactions = await Transaction.find({
+      user: userId,
+      status: TransactionStatus.COMPLETED,
+    })
       .populate("card")
       .populate("currency");
     res.status(200).json(transactions);

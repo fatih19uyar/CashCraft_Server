@@ -12,6 +12,7 @@ import cardRouter from "./routers/cardRouters";
 import userRoleRouter from "./routers/userRoleRouters";
 import paymentRouter from "./routers/paymentRouter";
 import loginRecordRouter from "./routers/loginRecordRouter";
+import walletCardRouter from "./routers/walletCardRouter";
 
 const app = express();
 
@@ -53,6 +54,7 @@ app.use("/api/cards", cardRouter);
 app.use("/api/userRoles", userRoleRouter);
 app.use("/api/payments", paymentRouter);
 app.use("/api/loginRecords", loginRecordRouter);
+app.use("/api/walletCards", walletCardRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   const error: any = new Error("Not Found");
