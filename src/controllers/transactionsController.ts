@@ -34,7 +34,8 @@ export async function getAllTransactions(req: Request, res: Response) {
       status: TransactionStatus.COMPLETED,
     })
       .populate("card")
-      .populate("currency");
+      .populate("currency")
+      .sort({ _id: -1 });
     res.status(200).json(transactions);
   } catch (error: any) {
     res
