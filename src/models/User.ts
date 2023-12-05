@@ -1,15 +1,6 @@
-import { prop, Ref, Typegoose, post } from "@typegoose/typegoose";
+import { prop, Ref, Typegoose, post, pre } from "@typegoose/typegoose";
 import { UserRole } from "./UserRole";
-import { generateRandomNumericCardNumber } from "../utils/randomGenerate";
-import { createWalletCard } from "../controllers/walletCardController";
 
-@post<User>("save", async (doc) => {
-  try {
-    await createWalletCard(doc._id);
-  } catch (error) {
-    console.error("Wallet Card oluşturulurken hata:", error);
-  }
-})
 export class User extends Typegoose {
   @prop()
   name!: string;

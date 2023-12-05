@@ -7,6 +7,7 @@ import {
   sendActivationCodeByEmail,
 } from "../utils/email/mailService";
 import config from "../../config";
+import { createWalletCard } from "./walletCardController";
 
 const JWT_SECRET = config.secretKey; // JWT gizli anahtarınız
 
@@ -33,6 +34,7 @@ export async function signUp(req: Request, res: Response) {
         },
       }
     );
+    await createWalletCard(existingUser._id);
 
     const token = jwt.sign({ userId: existingUser._id }, JWT_SECRET, {
       expiresIn: "7d",
