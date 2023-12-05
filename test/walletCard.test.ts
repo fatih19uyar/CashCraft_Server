@@ -49,7 +49,7 @@ describe("WalletCard Endpoints", () => {
   it("should get wallet card by user ID", async () => {
     const res = await chai
       .request(app)
-      .get("/api/wallet-card/getWalletCardByUserId")
+      .get("/api/walletCards/getWalletCardByUserId")
       .set("Authorization", `Bearer ${authToken}`);
 
     expect(res).to.have.status(200);
@@ -61,7 +61,7 @@ describe("WalletCard Endpoints", () => {
   it("should get wallet card balance", async () => {
     const res = await chai
       .request(app)
-      .get("/api/wallet-card/getBalance")
+      .get("/api/walletCards/getBalance")
       .set("Authorization", `Bearer ${authToken}`);
 
     expect(res).to.have.status(200);
@@ -72,7 +72,7 @@ describe("WalletCard Endpoints", () => {
     const amount = 100; // update amount
     const res = await chai
       .request(app)
-      .post("/api/wallet-card/updateWalletCardBalance")
+      .post("/api/walletCards/updateWalletCardBalance")
       .set("Authorization", `Bearer ${authToken}`)
       .send({
         amount,
@@ -86,7 +86,7 @@ describe("WalletCard Endpoints", () => {
   it("should delete wallet card", async () => {
     const res = await chai
       .request(app)
-      .delete("/api/wallet-card/deleteWalletCard")
+      .delete("/api/walletCards/deleteWalletCard")
       .set("Authorization", `Bearer ${authToken}`);
 
     expect(res).to.have.status(200);
