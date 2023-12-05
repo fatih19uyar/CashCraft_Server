@@ -131,6 +131,7 @@ export const updateWalletCardBalance = async (req: Request, res: Response) => {
       card: walletCard,
       status: TransactionStatus.COMPLETED,
       qrCode: "walletCardProcess",
+      currency: walletCard.currency,
     });
 
     await transaction.save();
