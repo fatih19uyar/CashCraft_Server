@@ -10,6 +10,7 @@ const expect = chai.expect;
 describe("WalletCard Endpoints", () => {
   let authToken: string;
   let userId: string;
+  let cardNumber: string;
 
   // Kullanıcı rolü oluştur ve giriş yap
   it("should register a new user", async () => {
@@ -51,6 +52,8 @@ describe("WalletCard Endpoints", () => {
       .request(app)
       .get("/api/walletCards/getWalletCardByUserId")
       .set("Authorization", `Bearer ${authToken}`);
+
+    cardNumber = res.body.cardNumber;
 
     expect(res).to.have.status(200);
     expect(res.body).to.have.property("cardNumber");
@@ -98,8 +101,7 @@ describe("WalletCard Endpoints", () => {
   // Test sonunda kullanıcıyı temizle
   after(async () => {
     console.log("deleted user");
-    const user = await UserModel.findById(userId);
-    if (user) await WalletCardModel.deleteMany({ user: user });
-    await UserModel.deleteOne({ _id: userId });
+    await UserModel.deleteOne({ email: "testuser@gmail.com" });
+    await WalletCardModel.deleteOne({ cardNumber: cardNumber });
   });
 });
