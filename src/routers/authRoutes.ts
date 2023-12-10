@@ -10,7 +10,10 @@ import {
   verifyPhoneActivationCode,
   verifyResetCode,
   checkPhoneNumberExists,
+  confirmationCode,
+  verifyConfirmationCode,
 } from "../controllers/authController";
+import { verifyToken } from "../middleware/authMiddleWare";
 
 const authRoutes = express.Router();
 
@@ -26,5 +29,7 @@ authRoutes.post("/checkEmailExists", checkEmailExists);
 authRoutes.post("/verifyPhoneActivationCode", verifyPhoneActivationCode);
 authRoutes.post("/verifyResetCode", verifyResetCode);
 authRoutes.post("/checkPhoneNumberExists", checkPhoneNumberExists);
+authRoutes.post("/confirmationCode", verifyToken, confirmationCode);
+authRoutes.post("/verifyConfirmationCode", verifyToken, verifyConfirmationCode);
 
 export default authRoutes;

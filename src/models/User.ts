@@ -27,6 +27,9 @@ export class User extends Typegoose {
   resetCode?: string; // Şifre sıfırlama kodu
 
   @prop()
+  confirmationCode?: string; // Onaylama kodu
+
+  @prop()
   password!: string;
 
   @prop({ required: true, ref: UserRole })

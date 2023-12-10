@@ -69,19 +69,6 @@ export async function sendResetCodeByEmail(
   await sendEmail(emailData);
 }
 
-export function generateResetCode(): string {
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  return Array.from({ length: 6 }, () =>
-    characters.charAt(Math.floor(Math.random() * characters.length))
-  ).join("");
-}
-export function generateVerificationCode(): number {
-  return parseInt(
-    Array.from({ length: 6 }, () => Math.floor(Math.random() * 10)).join("")
-  );
-}
-
 export async function microsoftGraphApiToken() {
   try {
     const tokenRequestData = {

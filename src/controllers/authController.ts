@@ -2,12 +2,10 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import UserModel from "../models/User";
-import {
-  generateVerificationCode,
-  sendActivationCodeByEmail,
-} from "../utils/email/mailService";
+import { sendActivationCodeByEmail } from "../utils/email/mailService";
 import config from "../../config";
 import { createWalletCard } from "./walletCardController";
+import { generateVerificationCode } from "../utils/randomGenerate";
 
 const JWT_SECRET = config.secretKey; // JWT gizli anahtarınız
 
@@ -247,6 +245,42 @@ export async function verifyResetCode(req: Request, res: Response) {
       return res.status(401).json({ message: "Geçersiz aktivasyon kodu." });
     }
     return res.status(200).json({ id: user._id, message: "Login Success." });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Bir hata oluştu. Lütfen tekrar deneyin." });
+  }
+}
+export async function verifyConfirmationCode(req: Request, res: Response) {
+  try {
+    const { email, confirmationCode } = req.body;
+
+    const user = await UserModel.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "Kullanıcı bulunamadı." });
+    }
+    if (user.confirmationCode !== confirmationCode) {
+      return res.status(401).json({ message: "Geçersiz onaylama kodu." });
+    }
+    return res.status(200).json({ message: "Confirmation Success." });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Bir hata oluştu. Lütfen tekrar deneyin." });
+  }
+}
+export async function confirmationCode(req: Request, res: Response) {
+  try {
+    const { email } = req.body;
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "Kullanıcı bulunamadı." });
+    }
+    user.confirmationCode = generateVerificationCode().toString();
+    await user.save();
+
+    return res.status(200).json({ message: "Conformation added." });
   } catch (error) {
     res
       .status(500)

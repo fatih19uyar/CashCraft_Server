@@ -17,3 +17,13 @@ export function generateRandomNumericCardNumber(length: number): string {
 
   return result.join("");
 }
+export function generateVerificationCode(): number {
+  return Math.floor(100000 + Math.random() * 900000);
+}
+export function generateResetCode(): string {
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  return Array.from({ length: 6 }, () =>
+    characters.charAt(Math.floor(Math.random() * characters.length))
+  ).join("");
+}
