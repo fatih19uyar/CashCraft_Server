@@ -253,9 +253,9 @@ export async function verifyResetCode(req: Request, res: Response) {
 }
 export async function verifyConfirmationCode(req: Request, res: Response) {
   try {
-    const { email, confirmationCode } = req.body;
+    const { id, confirmationCode } = req.body;
 
-    const user = await UserModel.findOne({ email });
+    const user = await UserModel.findById(id);
 
     if (!user) {
       return res.status(404).json({ message: "Kullanıcı bulunamadı." });
@@ -272,8 +272,8 @@ export async function verifyConfirmationCode(req: Request, res: Response) {
 }
 export async function confirmationCode(req: Request, res: Response) {
   try {
-    const { email } = req.body;
-    const user = await UserModel.findOne({ email });
+    const { id } = req.body;
+    const user = await UserModel.findById(id);
     if (!user) {
       return res.status(404).json({ message: "Kullanıcı bulunamadı." });
     }
