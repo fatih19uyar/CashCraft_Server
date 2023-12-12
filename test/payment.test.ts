@@ -44,18 +44,6 @@ describe("Payment Endpoints", () => {
     userId = user?._id;
     authToken = res.body.token;
   });
-
-  // Kullanıcı girişi testi
-  it("should authenticate an existing user", async () => {
-    const res = await chai.request(app).post("/api/auth/signin").send({
-      email: "testuser@gmail.com",
-      password: "123123",
-    });
-
-    expect(res).to.have.status(200);
-    expect(res.body).to.have.property("token");
-  });
-
   it("should make a credit card payment", async () => {
     const res = await chai
       .request(app)
@@ -77,11 +65,10 @@ describe("Payment Endpoints", () => {
       .post("/api/payments/debitCardPayment")
       .set("Authorization", `Bearer ${authToken}`)
       .send({
-        creditCardNumber: "1000100010001000",
-        cvv: "123",
+        debitCardNumber: "1000100010001000",
+        pin: "123",
         amount: "100",
       });
-
     expect(res).to.have.status(200);
     expect(res.body).to.have.property("success").to.be.true;
   });
@@ -89,10 +76,10 @@ describe("Payment Endpoints", () => {
   it("should deposit to account", async () => {
     const res = await chai
       .request(app)
-      .put("/api/payments/deposit/" + userId) // user ID'sini değiştirin
+      .put("/api/payments/deposit/" + userId)
       .set("Authorization", `Bearer ${authToken}`)
       .send({
-        amount: "200", // Örnek olarak yatırılacak miktarı ekleyin
+        amount: "200", // Örnek olarak yatırılacak miktar
       });
 
     expect(res).to.have.status(200);
@@ -102,7 +89,7 @@ describe("Payment Endpoints", () => {
   it("should get account info", async () => {
     const res = await chai
       .request(app)
-      .get("/api/payments/getAccountInfo/" + userId) // user ID'sini değiştirin
+      .get("/api/payments/getAccountInfo/" + userId)
       .set("Authorization", `Bearer ${authToken}`);
 
     expect(res).to.have.status(200);
@@ -112,10 +99,10 @@ describe("Payment Endpoints", () => {
   it("should withdraw from account", async () => {
     const res = await chai
       .request(app)
-      .put("/api/payments/withdraw/" + userId) // user ID'sini değiştirin
+      .put("/api/payments/withdraw/" + userId)
       .set("Authorization", `Bearer ${authToken}`)
       .send({
-        amount: "50", // Örnek olarak çekilecek miktarı ekleyin
+        amount: "50", // Örnek olarak çekilecek miktar
       });
 
     expect(res).to.have.status(200);

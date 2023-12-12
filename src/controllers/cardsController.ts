@@ -16,7 +16,6 @@ export async function createCard(req: Request, res: Response) {
       cardStyle,
       user,
     } = req.body;
-    console.log("aa");
     const card = new CardModel({
       cardName,
       cardNumber,
