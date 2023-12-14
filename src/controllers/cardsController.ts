@@ -3,6 +3,7 @@ import { Card, CardModel } from "../models/Card";
 import jwt from "jsonwebtoken";
 import config from "../../config";
 import { CardStyle, CardType } from "../types/type";
+import { decryptCardData } from "../utils/encryptionUtils";
 
 // Yeni bir kart oluşturma
 export async function createCard(req: Request, res: Response) {
@@ -99,19 +100,31 @@ export async function getCardsByUserId(req: Request, res: Response) {
     const decodedToken: any = jwt.verify(token, config.secretKey);
     const userId = decodedToken.userId;
     const cards = await CardModel.find({ user: userId });
-    console.log(userId);
+
     if (!cards) {
       return res.status(404).json({ message: "Kullanıcının kartı bulunamadı" });
     }
+    // Kart bilgilerini çözme işlemi
+    const decryptedCards = cards.map(async (card) => {
+      const decryptedCardNumber = await decryptCardData(card.cardNumber);
+      const decryptedCardExpiration = await decryptCardData(
+        card.cardExpiration
+      );
 
-    res.status(200).json(cards);
+      return {
+        ...card.toJSON(),
+        cardNumber: decryptedCardNumber,
+        cardExpiration: decryptedCardExpiration,
+      };
+    });
+    // Tüm çözülmüş kart bilgilerini gönderme
+    res.status(200).json(await Promise.all(decryptedCards));
   } catch (error: any) {
     res
       .status(500)
       .json({ message: "Kartları alma hatası", error: error.message });
   }
 }
-
 // Belirli bir kullanıcının belirli bir kart türündeki kartlarını getirme
 export async function getCardsByUserIdAndCardType(req: Request, res: Response) {
   try {
