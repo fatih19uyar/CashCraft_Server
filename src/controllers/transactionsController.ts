@@ -10,7 +10,7 @@ export async function createTransaction(req: Request, res: Response) {
   try {
     const qrCodeDataUrl = await generateQRCode(JSON.stringify(req.body));
     req.body.qrCode = qrCodeDataUrl;
-    req.body.createDate = new Date().getTime();
+    req.body.createDate = new Date().toISOString();
     req.body.status = req.body.status ?? TransactionStatus.PENDING; // Eğer req.body.status tanımlı değilse veya undefined ise, TransactionStatus.PENDING olarak atar
     const newTransaction = new Transaction(req.body);
     await newTransaction.save();

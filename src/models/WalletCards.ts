@@ -1,9 +1,18 @@
-import { prop, Ref, Typegoose } from "@typegoose/typegoose";
+import { pre, prop, Ref, Typegoose } from "@typegoose/typegoose";
 import { User } from "./User";
 import { Currency } from "./Currency";
 import { generateOneYearExpirationDate } from "../utils/randomGenerate";
 import { CardStatus } from "../types/type";
+import bcrypt from "bcrypt";
 
+@pre<WalletCard>("save", async function (next) {
+  if (this.isModified("cardNumber") || this.isModified("cardExpiration")) {
+    // Kart numarası şifrelemeyi yap
+    const saltRounds = 10;
+    this.cardNumber = await bcrypt.hash(this.cardNumber, saltRounds);
+  }
+  next();
+})
 class WalletCard extends Typegoose {
   @prop({ required: true, unique: true })
   cardNumber!: string;
