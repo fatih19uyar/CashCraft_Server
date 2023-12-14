@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
 import { WalletCardModel } from "../models/WalletCards";
 import { CardStatus, TransactionStatus } from "../types/type";
-import UserModel, { User } from "../models/User";
+import UserModel from "../models/User";
 import { TransactionModel } from "../models/Transaction";
 import { generateRandomNumericCardNumber } from "../utils/randomGenerate";
 import { CurrencyModel } from "../models/Currency";
-import { Ref } from "@typegoose/typegoose";
 
 export const createWalletCard = async (
   userId: string
