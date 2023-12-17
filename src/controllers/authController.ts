@@ -2,7 +2,10 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import UserModel from "../models/User";
-import { sendActivationCodeByEmail } from "../utils/email/mailService";
+import {
+  sendActivationCodeByEmail,
+  sendPhoneCodeByEmail,
+} from "../utils/email/mailService";
 import config from "../../config";
 import { createWalletCard } from "./walletCardController";
 import { generateVerificationCode } from "../utils/randomGenerate";
@@ -68,6 +71,8 @@ export async function signIn(req: Request, res: Response) {
     const phoneVerificationCode: number = generateVerificationCode();
     user.phoneVerificationCode = phoneVerificationCode;
     await user.save();
+    await sendPhoneCodeByEmail(user.email, phoneVerificationCode.toString());
+
     res.status(200).json({
       token,
     });
@@ -125,13 +130,13 @@ export async function sendVerificationCodeByEmail(req: Request, res: Response) {
   try {
     const { email } = req.body;
     // Kullanıcıyı bulun veya oluşturun
-    let user: any = await UserModel.findOne({ email });
+    let user = await UserModel.findOne({ email });
     if (!user) {
       user = new UserModel({ email });
     }
 
     // E-posta aktivasyon kodunu oluşturun ve kaydedin
-    const verificationCode: any = generateVerificationCode();
+    const verificationCode: string = generateVerificationCode().toString();
     user.verificationCode = verificationCode;
     await user.save();
 

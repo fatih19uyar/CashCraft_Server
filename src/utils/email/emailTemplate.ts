@@ -16,6 +16,24 @@ export const activationTemplate = (code: string) => {
       </body>
     `;
 };
+export const phoneVerificationCodeTemplate = (code: string) => {
+  return `
+        <body>
+            <div class="container">
+                <div class="header">
+                    <h1>Giriş Kodu</h1>
+                </div>
+                <div class="content">
+                    <p>Merhaba,</p>
+                    <p>Hesabınıza giriş yapmak için aşağıdaki kodu kullanabilirsiniz:</p>
+                    <p><strong>Giriş Kodu:</strong> ${code}</p> 
+                    <p>Teşekkür ederiz.</p>
+                    <p>Saygılarımla,<br>Idvlabs Ekibi</p>
+                </div>
+            </div>
+        </body>
+      `;
+};
 export const resetTemplate = (code: string) => {
   return `
         <body>

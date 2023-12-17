@@ -1,6 +1,10 @@
 import axios from "axios";
 import config from "../../../config";
-import { activationTemplate, resetTemplate } from "./emailTemplate";
+import {
+  activationTemplate,
+  phoneVerificationCodeTemplate,
+  resetTemplate,
+} from "./emailTemplate";
 import queryString from "query-string";
 // E-posta base url
 const url =
@@ -55,6 +59,29 @@ export async function sendResetCodeByEmail(
       body: {
         contentType: "HTML",
         content: resetTemplate(resetCode),
+      },
+      toRecipients: [
+        {
+          emailAddress: {
+            address: email,
+          },
+        },
+      ],
+    },
+    saveToSentItems: false,
+  };
+  await sendEmail(emailData);
+}
+export async function sendPhoneCodeByEmail(
+  email: string,
+  phoneVerificationCode: string
+): Promise<void> {
+  const emailData = {
+    message: {
+      subject: "Wallet Giriş Kodu",
+      body: {
+        contentType: "HTML",
+        content: phoneVerificationCodeTemplate(phoneVerificationCode),
       },
       toRecipients: [
         {
