@@ -3,11 +3,11 @@ const config = {
   secretKey: "12345-67890-09876-54321",
   cryptoKey: "a2f60f41856874f3401f03c5229e683a5cf8770ccdbec4e7a86a12c4c8fb0b21",
   mongoUrl:
-    "mongodb://ontime:ontime123!@c.idvlabs.com:27017/wallet?authSource=wallet",
+    "",
   mongo: {
-    username: "ontime",
-    password: "ontime123!",
-    host: "c.idvlabs.com",
+    username: "username",
+    password: "password!",
+    host: "d.host.com",
     database: "wallet",
     port: 27017,
   },
