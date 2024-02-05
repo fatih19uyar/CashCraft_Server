@@ -1,4 +1,4 @@
-# Wallet Server
+# CashCraft Server
 
 
 
@@ -15,14 +15,10 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
-git remote add origin https://gitlab.com/idvlabs/wallet/wallet-server.git
+git remote add origin https://github.com/fatih19uyar/CashCraft_Server.git
 git branch -M main
 git push -uf origin main
 ```
-
-## Integrate with your tools
-
-- [ ] [Set up project integrations](https://gitlab.com/idvlabs/wallet/wallet-server/-/settings/integrations)
 
 ## Collaborate with your team
 
